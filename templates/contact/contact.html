@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+{% include "css_include.html" %}
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'index_home' %}l">Adventure</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
+                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="oi oi-menu"></span> Menu
+        </button>
+
+        <div class="collapse navbar-collapse" id="ftco-nav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a href="{% url 'index_home' %}" class="nav-link">Home</a></li>
+                <li class="nav-item"><a href="{% url 'introduce_home' %}" class="nav-link">Introduce</a></li>
+                <li class="nav-item"><a href="{% url 'show_home' %}" class="nav-link">Show</a></li>
+                <li class="nav-item"><a href="{% url 'project_home' %}" class="nav-link">Project</a></li>
+                <li class="nav-item"><a href="{% url 'blog_home' %}" class="nav-link">Blog</a></li>
+                <li class="nav-item active"><a href="{% url 'contact_home' %}" class="nav-link">Contact</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- END nav -->
+
+<div class="hero-wrap js-fullheight" style="background-image: url('{% static "images/bg_1.jpg" %}');">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center"
+             data-scrollax-parent="true">
+            <div class="col-md-9 text-center ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
+                <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Contact Us</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="ftco-section contact-section ftco-degree-bg">
+    <div class="container">
+        <div class="row d-flex mb-5 contact-info">
+            <div class="col-md-12 mb-4">
+                <h2 class="h4">Contact Information</h2>
+            </div>
+            <div class="w-100"></div>
+            <div class="col-md-auto">
+                <p><span>Address:</span> Chengdu university of technology, erxianqiao, chenghua district, chengdu city
+                </p>
+            </div>
+            <div class="col-md-3">
+                <p><span>Phone:</span> <a href="tel://1234567920">+ 177 1107 7975</a></p>
+            </div>
+            <div class="col-md-3">
+                <p><span>Email:</span> <a href="mailto:info@yoursite.com">1208589984@qq.com</a></p>
+            </div>
+            <div class="col-md-3">
+                <p><span>Website</span> <a href="#">www.darrenpang.com</a></p>
+            </div>
+        </div>
+        <div class="row one-half block-9">
+            <div class="col-md-6 order-md-last pr-md-5">
+                <form action="#">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Your Name">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Your Email">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Subject">
+                    </div>
+                    <div class="form-group">
+                        <textarea name="" id="" cols="30" rows="7" class="form-control"
+                                  placeholder="Message"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Send Message" class="btn btn-primary py-3 px-5">
+                    </div>
+                </form>
+
+            </div>
+
+            <div class="col-md-6 img" style="background-image: url('{% static "images/want-to.jpg" %}');"></div>
+
+        </div>
+    </div>
+</section>
+
+
+{% include "footer.html" %}
+{% include "js_include.html" %}
+
+</body>
+</html>
