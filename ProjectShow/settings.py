@@ -35,13 +35,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'bootstrap3',
+
     'media',
     'blog',
     'contact',
     'home',
     'introduce',
     'project',
-    'show'
+    'show',
+    'account',
+    'article',
+
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
@@ -59,6 +66,7 @@ ROOT_URLCONF = 'ProjectShow.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        # 'DIRS': [os.path.join(BASE_DIR, 'templates'), ],
         'DIRS': [os.path.join(BASE_DIR, "templates").replace('\\', '/')],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -126,6 +134,36 @@ USE_TZ = True
 STATIC_URL = '/static/'
 HERE = os.path.dirname(os.path.abspath(__file__))
 HERE = os.path.join(HERE, '../')
+
+LOGIN_URL = '/account/login/'
+BOOTSTRAP3 = {
+    'include_jquery': True,
+}
+
+# email setting
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'strivexj@gmail.com'
+EMAIL_HOST_PASSWORD = 'keepstriving'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.qq.com'
+# EMAIL_PORT = 25
+# EMAIL_HOST_USER = '1003214597@qq.com'
+# EMAIL_HOST_PASSWORD = 'wtutawjxewghbgaf'
+# EMAIL_USE_TLS = True  # 这里必须是 True，否则发送不成功
+# EMAIL_FROM = "1003214597@qq.com"
+# DEFAULT_FROM_EMAIL = "1003214597@qq.com"
+
+SITE_ID = 1
+
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+REDIS_DB = 0
+
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}
+<title>Adaptation</title>
+{% endblock %}
+{% block content %}
+
+<div class="row text-center vertical-middle-sm">
+    <h1>Course</h1>
+</div>
+<div class="container">
+    {{adaptation.html|safe}}
+</div>
+<div id="bottom">
+    <a href="{{adaptation.url}}"> {{adaptation.school}} &nbsp;&nbsp;&nbsp;</a>
+
+    <a href="/valid/{{adaptation.id}}?origin={{adaptation.valid}}">
+        Valid:{{adaptation.valid}}&nbsp;&nbsp;&nbsp; </a>
+    <a href="/adapted/{{adaptation.id}}?origin={{adaptation.adapted}}">
+        Adapted:{{adaptation.adapted}} &nbsp;&nbsp;&nbsp;</a>
+</div>
+{% endblock %}
+

@@ -3,26 +3,7 @@
 {% include "css_include.html" %}
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-    <div class="container">
-        <a class="navbar-brand" href="{% url 'index_home' %}">Adventure</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
-                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="oi oi-menu"></span> Menu
-        </button>
-
-        <div class="collapse navbar-collapse" id="ftco-nav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a href="{% url 'index_home' %}" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="{% url 'introduce_home' %}" class="nav-link">Introduce</a></li>
-                <li class="nav-item"><a href="{% url 'show_home' %}" class="nav-link">Show</a></li>
-                <li class="nav-item active"><a href="{% url 'project_home' %}" class="nav-link">Project</a></li>
-                <li class="nav-item"><a href="{% url 'blog_home' %}" class="nav-link">Blog</a></li>
-                <li class="nav-item"><a href="{% url 'contact_home' %}" class="nav-link">Contact</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
+{% include "header.html" %}
 <!-- END nav -->
 
 <div class="hero-wrap js-fullheight" style="background-image: url('../static/images/bg_1.jpg');">
@@ -32,8 +13,10 @@
              data-scrollax-parent="true">
             <div class="col-md-9 text-center ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
                 <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }"><span
-                        class="mr-2"><a href="../home/index.html">Home</a></span> <span>Hotel</span></p>
-                <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Hotels</h1>
+                        class="mr-2">
+{#                    <a href="../home/index1.html">Home</a></span> <span>Hotel</span></p>#}
+                <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
+                    项目展示</h1>
             </div>
         </div>
     </div>
@@ -44,21 +27,21 @@
         <div class="row">
             <div class="col-lg-3 sidebar order-md-last ftco-animate">
                 <div class="sidebar-wrap ftco-animate">
-                    <h3 class="heading mb-4">Find City</h3>
+                    <h3 class="heading mb-4">Find Project</h3>
                     <form action="#">
                         <div class="fields">
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Destination, City">
+                                <input type="text" class="form-control" placeholder="Name">
                             </div>
                             <div class="form-group">
                                 <div class="select-wrap one-third">
                                     <div class="icon"><span class="ion-ios-arrow-down"></span></div>
                                     <select name="" id="" class="form-control" placeholder="Keyword search">
-                                        <option value="">Select Location</option>
-                                        <option value="">San Francisco USA</option>
-                                        <option value="">Berlin Germany</option>
-                                        <option value="">Lodon United Kingdom</option>
-                                        <option value="">Paris Italy</option>
+                                        <option value="">Select Company</option>
+                                        <option value="">Google</option>
+                                        <option value="">Baidu</option>
+                                        <option value="">FaceBool</option>
+                                        <option value="">Microsoft</option>
                                     </select>
                                 </div>
                             </div>
@@ -70,20 +53,20 @@
                                 <input type="text" id="checkout_date" class="form-control checkout_date"
                                        placeholder="Date to">
                             </div>
-                            <div class="form-group">
-                                <div class="range-slider">
-		              		<span>
-										    <input type="number" value="25000" min="0" max="120000"/>	-
-										    <input type="number" value="50000" min="0" max="120000"/>
-										  </span>
-                                    <input value="1000" min="0" max="120000" step="500" type="range"/>
-                                    <input value="50000" min="0" max="120000" step="500" type="range"/>
-                                    </svg>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" value="Search" class="btn btn-primary py-3 px-5">
-                            </div>
+{#                            <div class="form-group">#}
+{#                                <div class="range-slider">#}
+{#		              		<span>#}
+{#										    <input type="number" value="25000" min="0" max="120000"/>	-#}
+{#										    <input type="number" value="50000" min="0" max="120000"/>#}
+{#										  </span>#}
+{#                                    <input value="1000" min="0" max="120000" step="500" type="range"/>#}
+{#                                    <input value="50000" min="0" max="120000" step="500" type="range"/>#}
+{#                                    </svg>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="form-group">#}
+{#                                <input type="submit" value="Search" class="btn btn-primary py-3 px-5">#}
+{#                            </div>#}
                         </div>
                     </form>
                 </div>
@@ -138,7 +121,7 @@
                     <div class="col-sm col-md-6 col-lg-4 ftco-animate">
                         <div class="destination">
                             <a href="#" class="img img-2 d-flex justify-content-center align-items-center"
-                               style="background-image: url(../static/images/hotel-1.jpg);">
+                               style="background-image: url(../static/images/image_classification.jpg);">
                                 <div class="icon d-flex justify-content-center align-items-center">
                                     <span class="icon-link"></span>
                                 </div>
@@ -146,7 +129,7 @@
                             <div class="text p-3">
                                 <div class="d-flex">
                                     <div class="one">
-                                        <h3><a href="#">New Orleans, LA</a></h3>
+                                        <h3><a href="#">图像识别</a></h3>
                                         <p class="rate">
                                             <i class="icon-star"></i>
                                             <i class="icon-star"></i>
@@ -156,15 +139,15 @@
                                             <span>8 Rating</span>
                                         </p>
                                     </div>
-                                    <div class="two">
-                                        <span class="price per-price">$40<br><small>/night</small></span>
-                                    </div>
+{#                                    <div class="two">#}
+{#                                        <span class="price per-price">$40<br><small>/night</small></span>#}
+{#                                    </div>#}
                                 </div>
-                                <p>Far far away, behind the word mountains, far from the countries</p>
+                                <p>运用深度学习的图像识别项目，inception v4模型</p>
                                 <hr>
                                 <p class="bottom-area d-flex">
-                                    <span><i class="icon-map-o"></i> Miami, Fl</span>
-                                    <span class="ml-auto"><a href="#">Book Now</a></span>
+                                    <span><i class="icon-map-o"></i>Google</span>
+                                    <span class="ml-auto"><a href="#">了解更多</a></span>
                                 </p>
                             </div>
                         </div>
@@ -172,7 +155,7 @@
                     <div class="col-sm col-md-6 col-lg-4 ftco-animate">
                         <div class="destination">
                             <a href="#" class="img img-2 d-flex justify-content-center align-items-center"
-                               style="background-image: url(../static/images/hotel-2.jpg);">
+                               style="background-image: url(../static/images/face_detection.jpg);">
                                 <div class="icon d-flex justify-content-center align-items-center">
                                     <span class="icon-link"></span>
                                 </div>
@@ -180,7 +163,7 @@
                             <div class="text p-3">
                                 <div class="d-flex">
                                     <div class="one">
-                                        <h3><a href="#">New Orleans, LA</a></h3>
+                                        <h3><a href="#">人脸检测</a></h3>
                                         <p class="rate">
                                             <i class="icon-star"></i>
                                             <i class="icon-star"></i>
@@ -190,15 +173,15 @@
                                             <span>8 Rating</span>
                                         </p>
                                     </div>
-                                    <div class="two">
-                                        <span class="price per-price">$40<br><small>/night</small></span>
-                                    </div>
+{#                                    <div class="two">#}
+{#                                        <span class="price per-price">$40<br><small>/night</small></span>#}
+{#                                    </div>#}
                                 </div>
-                                <p>Far far away, behind the word mountains, far from the countries</p>
+                                <p>检测出图中的人脸，一般用于人脸识别的底层处理</p>
                                 <hr>
                                 <p class="bottom-area d-flex">
-                                    <span><i class="icon-map-o"></i> Miami, Fl</span>
-                                    <span class="ml-auto"><a href="#">Book Now</a></span>
+                                    <span><i class="icon-map-o"></i>Google</span>
+                                    <span class="ml-auto"><a href="#">了解更多</a></span>
                                 </p>
                             </div>
                         </div>
@@ -206,7 +189,7 @@
                     <div class="col-sm col-md-6 col-lg-4 ftco-animate">
                         <div class="destination">
                             <a href="#" class="img img-2 d-flex justify-content-center align-items-center"
-                               style="background-image: url(../static/images/hotel-3.jpg);">
+                               style="background-image: url(../static/images/SSD_dection.png);">
                                 <div class="icon d-flex justify-content-center align-items-center">
                                     <span class="icon-link"></span>
                                 </div>
@@ -214,7 +197,7 @@
                             <div class="text p-3">
                                 <div class="d-flex">
                                     <div class="one">
-                                        <h3><a href="#">New Orleans, LA</a></h3>
+                                        <h3><a href="#">目标检测</a></h3>
                                         <p class="rate">
                                             <i class="icon-star"></i>
                                             <i class="icon-star"></i>
@@ -224,15 +207,15 @@
                                             <span>8 Rating</span>
                                         </p>
                                     </div>
-                                    <div class="two">
-                                        <span class="price per-price">$40<br><small>/night</small></span>
-                                    </div>
+{#                                    <div class="two">#}
+{#                                        <span class="price per-price">$40<br><small>/night</small></span>#}
+{#                                    </div>#}
                                 </div>
-                                <p>Far far away, behind the word mountains, far from the countries</p>
+                                <p>检测出图像中的预先测定好的物体，此项目运用voc2014训练</p>
                                 <hr>
                                 <p class="bottom-area d-flex">
-                                    <span><i class="icon-map-o"></i> Miami, Fl</span>
-                                    <span class="ml-auto"><a href="#">Book Now</a></span>
+                                    <span><i class="icon-map-o"></i>Google</span>
+                                    <span class="ml-auto"><a href="#">了解更多</a></span>
                                 </p>
                             </div>
                         </div>

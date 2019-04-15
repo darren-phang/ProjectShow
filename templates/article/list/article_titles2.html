@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load article_tags %}
+{% block title %}<title>Articles</title> {% endblock %}
+{% block content %}
+<div class="row text-center vertical-middle-sm">
+    <h1>Share what you learned with others</h1>
+    <p>There are {% total_articles %} articles.</p>
+</div>
+<div class="container">
+    {% for article in articles %}
+    <div class="list-group">
+        <a href="{{article.get_url_path}}" class="list-group-item active">
+            <h4 class="list-group-item-heading">{{article.title}}</h4>
+        </a>
+
+        <p class="list-group-item-text">Author：<a
+                href="{% url 'article:author_articles' article.author.username %}">{{article.author.username}}</a>
+            &nbsp;{{article.created}}
+        </p>
+
+
+        <p class="list-group-item-text">{{article.body|slice:'150'|markdownabstract}}</p>
+        <!--<p class="list-group-item-text">{{article.body|slice:'70'| linebreaks}}</p>-->
+        <!--<p class="list-group-item-text">{{article.abstract}}</p>-->
+    </div>
+    {% endfor %}
+    {% include "paginator.html" %}
+</div>
+{% endblock %}
+

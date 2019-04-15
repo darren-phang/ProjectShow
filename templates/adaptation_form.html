@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load bootstrap3 %}
+
+{% block header %}
+<h2  class="text-center">Apply for Adaptation</h2>
+{% endblock header %}
+
+{% block content %}
+<form method="post" action="{% url 'home:adaptation_form' %}" class="form">
+    {% csrf_token %}
+    <div class="col-md-4 col-sm-offset-4 ">
+    {% bootstrap_form form %}
+
+    {% buttons %}
+    <button name="submit" class="btn btn-primary center-block">Apply for Adaptation</button>
+    {% endbuttons %}
+    <input type="hidden" name="next" value="{% url 'home:index' %}" />
+    </div>
+</form>
+{% endblock content %}

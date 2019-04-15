@@ -1,0 +1,54 @@
+{% extends "article/base.html" %}
+{% load static %}
+{% block title %}
+<title> Article Column</title>
+{% endblock %}
+{% block content %}
+<div>
+    <p class="text-right">
+        <button id="add_column" class="btn btn-primary" onclick="add_column()">Add Column</button>
+    </p>
+    <table class="table table-hover">
+        <tr>
+            <td>Number</td>
+            <td>Column Name</td>
+            <td>Operation</td>
+        </tr>
+        {% for column in columns %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{column.column}}</td>
+            <td>---</td>
+        </tr>
+        {% empty %}
+        <p>There have no column.</p>
+        {% endfor %}
+
+    </table>
+</div>
+
+<script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/layer.js' %}"></script>
+<script type="text/javascript">
+    function add_column() {
+        var index = layer.open({
+            type: 1,
+            skin: "layui-layer-rim",
+            area: ["400px", "200px"],
+            title: "New Column",
+            content: '<div class="text-center"style="margin-top: 20px"><p>Please input the name of column</p><p><input type="text"></p></div>'
+            btn: ['Comfirm', 'Cancel'],
+            yes: function (index, layero) {
+                column_name = $('#id_column').val();
+                alert(column_name);
+            },
+            btn2: function (index, layero) {
+                layer.close(index);
+            }
+        })
+    }
+    function fuck() {
+        alert("fuck")
+    }
+</script>
+{% endblock %}

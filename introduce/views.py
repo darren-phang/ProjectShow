@@ -4,4 +4,4 @@ from django.shortcuts import render
 
 
 def index(request):
-    return render(request, 'introduce/introduce.html')
+    return render(request, 'introduce/../templates/home/introduce.html')
