@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 {% include "css_include.html" %}
@@ -6,7 +7,7 @@
 {% include "header.html" %}
 <!-- END nav -->
 
-<div class="hero-wrap js-fullheight" style="background-image: url('../static/images/bg_1.jpg');">
+<div class="hero-wrap js-fullheight" style="background-image: url('../static/images/jingzhiyuan1.jpg');">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center"
@@ -53,20 +54,6 @@
                                 <input type="text" id="checkout_date" class="form-control checkout_date"
                                        placeholder="Date to">
                             </div>
-{#                            <div class="form-group">#}
-{#                                <div class="range-slider">#}
-{#		              		<span>#}
-{#										    <input type="number" value="25000" min="0" max="120000"/>	-#}
-{#										    <input type="number" value="50000" min="0" max="120000"/>#}
-{#										  </span>#}
-{#                                    <input value="1000" min="0" max="120000" step="500" type="range"/>#}
-{#                                    <input value="50000" min="0" max="120000" step="500" type="range"/>#}
-{#                                    </svg>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                            <div class="form-group">#}
-{#                                <input type="submit" value="Search" class="btn btn-primary py-3 px-5">#}
-{#                            </div>#}
                         </div>
                     </form>
                 </div>
@@ -75,6 +62,7 @@
                     <form method="post" class="star-rating">
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                            &nbsp;&nbsp;
                             <label class="form-check-label" for="exampleCheck1">
                                 <p class="rate"><span><i class="icon-star"></i><i class="icon-star"></i><i
                                         class="icon-star"></i><i class="icon-star"></i><i class="icon-star"></i></span>
@@ -83,6 +71,7 @@
                         </div>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                            &nbsp;&nbsp;
                             <label class="form-check-label" for="exampleCheck1">
                                 <p class="rate"><span><i class="icon-star"></i><i class="icon-star"></i><i
                                         class="icon-star"></i><i class="icon-star"></i><i
@@ -91,6 +80,7 @@
                         </div>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                            &nbsp;&nbsp;
                             <label class="form-check-label" for="exampleCheck1">
                                 <p class="rate"><span><i class="icon-star"></i><i class="icon-star"></i><i
                                         class="icon-star"></i><i class="icon-star-o"></i><i
@@ -99,6 +89,7 @@
                         </div>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                            &nbsp;&nbsp;
                             <label class="form-check-label" for="exampleCheck1">
                                 <p class="rate"><span><i class="icon-star"></i><i class="icon-star"></i><i
                                         class="icon-star-o"></i><i class="icon-star-o"></i><i
@@ -107,6 +98,7 @@
                         </div>
                         <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                            &nbsp;&nbsp;
                             <label class="form-check-label" for="exampleCheck1">
                                 <p class="rate"><span><i class="icon-star"></i><i class="icon-star-o"></i><i
                                         class="icon-star-o"></i><i class="icon-star-o"></i><i
@@ -118,10 +110,11 @@
             </div><!-- END-->
             <div class="col-lg-9">
                 <div class="row">
-                    <div class="col-sm col-md-6 col-lg-4 ftco-animate">
+                    {% for project in projects %}
+                        <div class="col-sm col-md-6 col-lg-4 ftco-animate">
                         <div class="destination">
-                            <a href="#" class="img img-2 d-flex justify-content-center align-items-center"
-                               style="background-image: url(../static/images/image_classification.jpg);">
+                            <a href="{{ project.get_project_url }}" class="img img-2 d-flex justify-content-center align-items-center"
+                               style="background-image: url({% static project.image_url %});">
                                 <div class="icon d-flex justify-content-center align-items-center">
                                     <span class="icon-link"></span>
                                 </div>
@@ -129,199 +122,58 @@
                             <div class="text p-3">
                                 <div class="d-flex">
                                     <div class="one">
-                                        <h3><a href="#">图像识别</a></h3>
+                                        <h3><a href="{{ project.get_project_url }}">{{ project.title }}</a></h3>
                                         <p class="rate">
                                             <i class="icon-star"></i>
                                             <i class="icon-star"></i>
                                             <i class="icon-star"></i>
                                             <i class="icon-star"></i>
                                             <i class="icon-star-o"></i>
-                                            <span>8 Rating</span>
+                                            <span>{{ project.star }}</span>
                                         </p>
                                     </div>
-{#                                    <div class="two">#}
-{#                                        <span class="price per-price">$40<br><small>/night</small></span>#}
+                                </div>
+                                <p>{{ project.describe }}</p>
+                                <hr>
+                                <p class="bottom-area d-flex">
+                                    <span><i class="icon-map-o"></i>{{ project.company }}</span>
+                                    <span class="ml-auto"><a href="{{ project.about_more_url }}">了解更多</a></span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+{#                    <div class="col-sm col-md-6 col-lg-4 ftco-animate">#}
+{#                        <div class="destination">#}
+{#                            <a href="#" class="img img-2 d-flex justify-content-center align-items-center"#}
+{#                               style="background-image: url(../static/images/gan.jpg);">#}
+{#                                <div class="icon d-flex justify-content-center align-items-center">#}
+{#                                    <span class="icon-link"></span>#}
+{#                                </div>#}
+{#                            </a>#}
+{#                            <div class="text p-3">#}
+{#                                <div class="d-flex">#}
+{#                                    <div class="one">#}
+{#                                        <h3><a href="#">图片风格转换</a></h3>#}
+{#                                        <p class="rate">#}
+{#                                            <i class="icon-star"></i>#}
+{#                                            <i class="icon-star"></i>#}
+{#                                            <i class="icon-star"></i>#}
+{#                                            <i class="icon-star"></i>#}
+{#                                            <i class="icon-star-o"></i>#}
+{#                                            <span>8 Rating</span>#}
+{#                                        </p>#}
 {#                                    </div>#}
-                                </div>
-                                <p>运用深度学习的图像识别项目，inception v4模型</p>
-                                <hr>
-                                <p class="bottom-area d-flex">
-                                    <span><i class="icon-map-o"></i>Google</span>
-                                    <span class="ml-auto"><a href="#">了解更多</a></span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm col-md-6 col-lg-4 ftco-animate">
-                        <div class="destination">
-                            <a href="#" class="img img-2 d-flex justify-content-center align-items-center"
-                               style="background-image: url(../static/images/face_detection.jpg);">
-                                <div class="icon d-flex justify-content-center align-items-center">
-                                    <span class="icon-link"></span>
-                                </div>
-                            </a>
-                            <div class="text p-3">
-                                <div class="d-flex">
-                                    <div class="one">
-                                        <h3><a href="#">人脸检测</a></h3>
-                                        <p class="rate">
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star-o"></i>
-                                            <span>8 Rating</span>
-                                        </p>
-                                    </div>
-{#                                    <div class="two">#}
-{#                                        <span class="price per-price">$40<br><small>/night</small></span>#}
-{#                                    </div>#}
-                                </div>
-                                <p>检测出图中的人脸，一般用于人脸识别的底层处理</p>
-                                <hr>
-                                <p class="bottom-area d-flex">
-                                    <span><i class="icon-map-o"></i>Google</span>
-                                    <span class="ml-auto"><a href="#">了解更多</a></span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm col-md-6 col-lg-4 ftco-animate">
-                        <div class="destination">
-                            <a href="#" class="img img-2 d-flex justify-content-center align-items-center"
-                               style="background-image: url(../static/images/SSD_dection.png);">
-                                <div class="icon d-flex justify-content-center align-items-center">
-                                    <span class="icon-link"></span>
-                                </div>
-                            </a>
-                            <div class="text p-3">
-                                <div class="d-flex">
-                                    <div class="one">
-                                        <h3><a href="#">目标检测</a></h3>
-                                        <p class="rate">
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star-o"></i>
-                                            <span>8 Rating</span>
-                                        </p>
-                                    </div>
-{#                                    <div class="two">#}
-{#                                        <span class="price per-price">$40<br><small>/night</small></span>#}
-{#                                    </div>#}
-                                </div>
-                                <p>检测出图像中的预先测定好的物体，此项目运用voc2014训练</p>
-                                <hr>
-                                <p class="bottom-area d-flex">
-                                    <span><i class="icon-map-o"></i>Google</span>
-                                    <span class="ml-auto"><a href="#">了解更多</a></span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm col-md-6 col-lg-4 ftco-animate">
-                        <div class="destination">
-                            <a href="#" class="img img-2 d-flex justify-content-center align-items-center"
-                               style="background-image: url(../static/images/hotel-4.jpg);">
-                                <div class="icon d-flex justify-content-center align-items-center">
-                                    <span class="icon-link"></span>
-                                </div>
-                            </a>
-                            <div class="text p-3">
-                                <div class="d-flex">
-                                    <div class="one">
-                                        <h3><a href="#">New Orleans, LA</a></h3>
-                                        <p class="rate">
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star-o"></i>
-                                            <span>8 Rating</span>
-                                        </p>
-                                    </div>
-                                    <div class="two">
-                                        <span class="price per-price">$40<br><small>/night</small></span>
-                                    </div>
-                                </div>
-                                <p>Far far away, behind the word mountains, far from the countries</p>
-                                <hr>
-                                <p class="bottom-area d-flex">
-                                    <span><i class="icon-map-o"></i> Miami, Fl</span>
-                                    <span class="ml-auto"><a href="#">Book Now</a></span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm col-md-6 col-lg-4 ftco-animate">
-                        <div class="destination">
-                            <a href="#" class="img img-2 d-flex justify-content-center align-items-center"
-                               style="background-image: url(../static/images/hotel-5.jpg);">
-                                <div class="icon d-flex justify-content-center align-items-center">
-                                    <span class="icon-link"></span>
-                                </div>
-                            </a>
-                            <div class="text p-3">
-                                <div class="d-flex">
-                                    <div class="one">
-                                        <h3><a href="#">New Orleans, LA</a></h3>
-                                        <p class="rate">
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star-o"></i>
-                                            <span>8 Rating</span>
-                                        </p>
-                                    </div>
-                                    <div class="two">
-                                        <span class="price per-price">$40<br><small>/night</small></span>
-                                    </div>
-                                </div>
-                                <p>Far far away, behind the word mountains, far from the countries</p>
-                                <hr>
-                                <p class="bottom-area d-flex">
-                                    <span><i class="icon-map-o"></i> Miami, Fl</span>
-                                    <span class="ml-auto"><a href="#">Book Now</a></span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm col-md-6 col-lg-4 ftco-animate">
-                        <div class="destination">
-                            <a href="#" class="img img-2 d-flex justify-content-center align-items-center"
-                               style="background-image: url(../static/images/hotel-5.jpg);">
-                                <div class="icon d-flex justify-content-center align-items-center">
-                                    <span class="icon-link"></span>
-                                </div>
-                            </a>
-                            <div class="text p-3">
-                                <div class="d-flex">
-                                    <div class="one">
-                                        <h3><a href="#">New Orleans, LA</a></h3>
-                                        <p class="rate">
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star-o"></i>
-                                            <span>8 Rating</span>
-                                        </p>
-                                    </div>
-                                    <div class="two">
-                                        <span class="price per-price">$40<br><small>/night</small></span>
-                                    </div>
-                                </div>
-                                <p>Far far away, behind the word mountains, far from the countries</p>
-                                <hr>
-                                <p class="bottom-area d-flex">
-                                    <span><i class="icon-map-o"></i> Miami, Fl</span>
-                                    <span class="ml-auto"><a href="#">Book Now</a></span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+{#                                </div>#}
+{#                                <p>运用对抗生成网络，将图片转换为任意风格。轻松获得高逼格图片</p>#}
+{#                                <hr>#}
+{#                                <p class="bottom-area d-flex">#}
+{#                                    <span><i class="icon-map-o"></i> Google</span>#}
+{#                                    <span class="ml-auto"><a href="#">了解更多</a></span>#}
+{#                                </p>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
                 </div>
 
                 <div class="row mt-5">
@@ -329,11 +181,13 @@
                         <div class="block-27">
                             <ul>
                                 <li><a href="#">&lt;</a></li>
-                                <li class="active"><span>1</span></li>
-                                <li><a href="#">2</a></li>
-                                <li><a href="#">3</a></li>
-                                <li><a href="#">4</a></li>
-                                <li><a href="#">5</a></li>
+                                {% for item in total_pages %}
+                                    {% if item == page.number %}
+                                    <li class="active"><a href="?page={{ item }}">{{ item }}</a></li>
+                                    {% else %}
+                                    <li><a href="?page={{ item }}">{{ item }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
                                 <li><a href="#">&gt;</a></li>
                             </ul>
                         </div>

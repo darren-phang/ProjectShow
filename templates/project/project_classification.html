@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+{% include "css_include.html" %}
+
+<body>
+{% include "header.html" %}
+
+<!-- END nav -->
+<div class="hero-wrap js-fullheight" style="background-image: url('{% static "images/bg_1.jpg" %}');">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center"
+             data-scrollax-parent="true">
+            <div class="col-md-9 text-center ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
+                <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Image Classification</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="ftco-about d-md-flex">
+    <div class="one-half" style="padding: 0">
+        <img src="../../../{{ MEDIA_URL }}{{ img_dir }}" width="100%" height="500px">
+    </div>
+    <div class="one-half ftco-animate">
+        <div>
+            {% for k,row in predict.items %}
+                <li>{{ k }}-{{ row }}</li>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<section class="ftco-section-parallax">
+    <div class="d-flex align-items-center" style="padding: 10px;margin: 20px">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <form method="POST" enctype="multipart/form-data" onsubmit="return validate_form(this)">
+                    {% csrf_token %}
+                    <label class="btn btn-primary py-3 px-5" for="xFile">选择图片</label>
+                    <input type="file" accept="image/*" name="img" id="xFile" style="position:absolute;clip:rect(0 0 0 0);">
+                    <button type="submit" class="btn btn-primary py-3 px-5">开始识别</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+{% include "footer.html" %}
+
+{% include "js_include.html" %}
+
+<script type="text/javascript">
+
+    function validate_required(field, alerttxt) {
+        with (field) {
+            if (value == null || value == "") {
+                alert(alerttxt);
+                return false
+            }
+            else {
+                return true
+            }
+        }
+    }
+
+    function validate_form(thisform) {
+        with (thisform) {
+            if (validate_required(img, "Please choose a picture at least!") == false) {
+                img.focus();
+                return false
+            }
+        }
+    }
+</script>
+</body>
+
+</html>

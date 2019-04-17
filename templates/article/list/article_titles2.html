@@ -1,30 +1,105 @@
-{% extends "base.html" %}
+{% load static %}
 {% load article_tags %}
-{% block title %}<title>Articles</title> {% endblock %}
-{% block content %}
-<div class="row text-center vertical-middle-sm">
-    <h1>Share what you learned with others</h1>
-    <p>There are {% total_articles %} articles.</p>
-</div>
-<div class="container">
-    {% for article in articles %}
-    <div class="list-group">
-        <a href="{{article.get_url_path}}" class="list-group-item active">
-            <h4 class="list-group-item-heading">{{article.title}}</h4>
-        </a>
-
-        <p class="list-group-item-text">Author：<a
-                href="{% url 'article:author_articles' article.author.username %}">{{article.author.username}}</a>
-            &nbsp;{{article.created}}
-        </p>
-
-
-        <p class="list-group-item-text">{{article.body|slice:'150'|markdownabstract}}</p>
-        <!--<p class="list-group-item-text">{{article.body|slice:'70'| linebreaks}}</p>-->
-        <!--<p class="list-group-item-text">{{article.abstract}}</p>-->
+<section class="ftco-section ftco-counter img" id="section-counter"
+         style="background-image: url(../static/images/bg_1.jpg);" data-stellar-background-ratio="0.5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="row">
+                    <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
+                        <div class="block-18 text-center">
+                            <div class="text">
+                                <strong class="number" data-number="{% total_articles %}">0</strong>
+                                <span>博客量</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
+                        <div class="block-18 text-center">
+                            <div class="text">
+                                <strong class="number" data-number="2000">0</strong>
+                                <span>项目个数</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
+                        <div class="block-18 text-center">
+                            <div class="text">
+                                <strong class="number" data-number="520">0</strong>
+                                <span>VIP用户</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 d-flex justify-content-center counter-wrap ftco-animate">
+                        <div class="block-18 text-center">
+                            <div class="text">
+                                <strong class="number" data-number="1314">0</strong>
+                                <span>博客量</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    {% endfor %}
-    {% include "paginator.html" %}
-</div>
-{% endblock %}
+</section>
+
+<section class="ftco-section services-section bg-light">
+    <div class="container">
+        <div class="row d-flex">
+            <div class="col-md-3 d-flex align-self-stretch ftco-animate">
+                <div class="media block-6 services d-block">
+                    <div class="icon"><span class="flaticon-yatch" href="{% url 'article:article_post'%}"></span></div>
+                    <div class="media-body">
+                        <a class="heading mb-3" href="{% url 'article:article_post'%}">发表文章</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="ftco-section bg-light">
+    <div class="container">
+        <div class="row d-flex">
+            {% for article in articles %}
+            <div class="col-md-4 d-flex ftco-animate">
+                <div class="blog-entry align-self-stretch">
+                    <a href="{{article.get_url_path}}" class="block-20"
+                       style="background-image: url('../static/images/image_2.jpg');">
+                    </a>
+                    <div class="text">
+                        <span class="tag">Tips, Travel</span>
+                        <h3 class="heading mt-3"><a href="{{article.get_url_path}}">{{article.title}}</a>
+                        </h3>
+                        <div class="meta mb-3">
+                            <div><a href="#">{{article.created}}</a></div>
+                            <div><a href="{% url 'article:author_articles' article.author.username %}">{{article.author.username}}</a></div>
+                            <div><a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="row mt-5">
+            <div class="col text-center">
+                <div class="block-27">
+                        <ul>
+                        <li><a href="#">&lt;</a></li>
+                        {% for item in total_pages %}
+                            {% if item == page.number %}
+                            <li class="active"><a href="?page={{ item }}">{{ item }}</a></li>
+                            {% else %}
+                            <li><a href="?page={{ item }}">{{ item }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                        <li><a href="#">&gt;</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 

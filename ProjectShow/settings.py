@@ -14,7 +14,6 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
@@ -42,9 +41,7 @@ INSTALLED_APPS = [
     'blog',
     'contact',
     'home',
-    'introduce',
     'project',
-    'show',
     'account',
     'article',
 
@@ -169,8 +166,9 @@ STATICFILES_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(HERE, 'static/'),
-    os.path.join(BASE_DIR, 'media'),
+    os.path.join(BASE_DIR, 'media/'),
 )
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media').replace('\\', '/')  # 设置静态文件路径为主目录下的media文件夹
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # 设置静态文件路径为主目录下的media文件夹
+print("darren:", MEDIA_ROOT)
 MEDIA_URL = 'ProjectShow/media/'

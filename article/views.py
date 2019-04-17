@@ -116,7 +116,6 @@ def article_detail(request, id, slug):
     return render(request, "article/column/article_detail.html", {"article": article})
 
 
-
 @login_required(login_url='/account/login')
 @require_POST
 @csrf_exempt

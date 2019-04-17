@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link href="{% static 'images/icon.png' %}" rel="SHORTCUT ICON">
+{#    <link href="{% static 'images/icon.png' %}" rel="SHORTCUT ICON">#}
     {% block title%} {% endblock title %}
     {% bootstrap_css %}
     <style type="text/css">
@@ -31,11 +31,15 @@
     </style>
 </head>
 <body>
+{% include "css_include.html" %}
 {% include 'header.html' %}
+
+<div class="js-fullheight" style="background-image: url( {% static 'images/home_bg.jpg' %});
+        height: 90px;">
+</div>
+<br><br>
 <div class="container">
     <div class="content">
-
-
 
     <div class="col-md-2">
         {% include 'article/leftslider.html' %}

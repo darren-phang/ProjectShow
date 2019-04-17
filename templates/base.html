@@ -1,4 +1,5 @@
 {% load bootstrap3 %}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -7,8 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {% load static %}
-    <link href="{% static 'images/icon.png' %}" rel="SHORTCUT ICON">
+{#    <link href="{% static 'images/icon.png' %}" rel="SHORTCUT ICON">#}
     {% block title%} {% endblock title %}
     {% bootstrap_css %}
     {% bootstrap_javascript %}
@@ -35,19 +35,19 @@
         }
     </style>
 </head>
+{% include "css_include.html" %}
 <body>
-{#{%include "header.html"%}#}
-
+{%include "header.html"%}
+<div class="js-fullheight" style="background-image: url( {% static 'images/home_bg.jpg' %});
+        height: 90px;">
+</div>
 <div class="container">
     <div class="content">
-        <div class="page-header">
-            {% block header %}{% endblock header %}
-        </div>
         <div>
             {% block content %}{% endblock content %}
         </div>
     </div>
 </div>
-{#{%include "footer.html"%}#}
+{%include "footer.html"%}
 </body>
 </html>

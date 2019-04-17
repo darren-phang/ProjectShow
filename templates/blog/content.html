@@ -1,0 +1,31 @@
+{% extends "base.html"%}
+{% load static %}
+
+{% block title%}
+<title>Blog's content</title>
+{% endblock title %}
+
+{%block content%}
+<div class="row text-center vertical-middle-sm">
+    <h1>{{article.title}}</h1>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-md-8">
+            <p class="text-center">
+               <span>
+                   {{article.author.username}}
+               </span>
+                <span class="margin-left:2px">
+                    {{publish}}
+                </span>
+            </p>
+        <div>{{article.body}}</div>
+    </div>
+
+    <div class="col-xs-6 col-md-4">
+        <h2>想不到吧</h2>
+        <p>没想到吧</p>
+        <img src="{% static 'images/icon.png' %}">
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,26 @@
+{% extends "base.html"%}
+{% load static %}
+
+{% block title%}
+<title>Blog</title>
+{% endblock title %}
+
+{%block content%}
+<div class="row text-center vertical-middle-sm">
+    <h1>My Blog</h1>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-md-8">
+        <ul>
+            {% for blog in blogs%}
+            <li><a href="{{blog.id}}">{{blog.title}}</a></li>
+            {%endfor%}
+        </ul>
+    </div>
+    <div class="col-xs-6 col-md-4">
+        <h2>想不到吧</h2>
+        <p>没想到吧</p>
+        <img src="{% static 'images/icon.png' %}">
+    </div>
+</div>
+{% endblock content %}

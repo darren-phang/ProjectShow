@@ -28,6 +28,7 @@ class ArticlePost(models.Model):
     author = models.ForeignKey(User, related_name="article", on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     slug = models.SlugField(max_length=500)
+    image_url = models.CharField(max_length=200, default="image_2.jpg")
     column = models.ForeignKey(ArticleColumn, related_name="article_column",
                                on_delete=models.CASCADE)
     body = models.TextField()
