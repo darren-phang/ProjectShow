@@ -46,7 +46,7 @@ def project_show_page(request, id, type):
         if request.method == 'POST':
             result = api.send_request(
                 os.path.join(dir_path, 'media', str(img_dir)), project.model_name,
-                project.signature_name, project.input_tensor_name)
+                project.signature_name, project.input_tensor_name, restore=False)
             label_and_percentage = api.classification_result(result)
             label_and_percentage_str = json.dumps(label_and_percentage)
             obj.predict = label_and_percentage_str
@@ -71,13 +71,18 @@ def project_show_page(request, id, type):
                 os.path.join(dir_path, 'media', str(img_dir)), project.model_name,
                 project.signature_name, project.input_tensor_name, other_k=other_k,
                 restore=False)
-            api.detection_result_face(result)
+            if project.model_name == 'face':
+                api.detection_result_face(result)
+            elif project.model_name == 'ssd':
+                api.detection_result_ssd(result)
             content = {
                 'img_dir': str(result['abs_img_dir']),
+                'infos': result['colors']
             }
         else:
             content = {
                 'img_dir': 'image/default_image_for_inception.jpeg',
+                'infos': {}
             }
         return render(request, 'project/project_detection.html', content)
 

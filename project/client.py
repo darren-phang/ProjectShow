@@ -6,7 +6,7 @@ import tensorflow as tf
 import tensorflow.contrib.util as util
 from tensorflow_serving.apis import predict_pb2, prediction_service_pb2
 import random
-from PIL import Image
+import project.label_information as label_infomation
 import matplotlib.pyplot as plt
 from skimage import transform
 import os
@@ -36,7 +36,6 @@ class ClientAPI(object):
         else:
             image = open(image_dir, 'rb').read()
             abs_img_dir = 'image/' + image_dir.split('/')[-1]
-        print('send request')
         request = predict_pb2.PredictRequest()
         # 端口里面的名字什么的，设置的第一级为test，第二级为predict_images
         request.model_spec.name = model_name
@@ -82,30 +81,64 @@ class ClientAPI(object):
         classes = np.array(classes)
         scores = np.array(scores)
         bboxes = np.array(bboxes)
-        results = ClientAPI.change_image(results, classes, scores, bboxes)
+        results = ClientAPI.change_image(results, classes, scores, bboxes, label_infomation.face)
         return results
 
     @staticmethod
     def detection_result_ssd(results):
-        pass
-
-    @staticmethod
-    def change_image(results, classes, scores, bboxes):
-        image_dir = results['abs_img_dir']
-        abs = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-        image = plt.imread(os.path.join(abs, 'media', image_dir))
-        ClientAPI.plt_bboxes(image, classes, scores, bboxes)
-        plt.savefig(os.path.join(abs, 'media', image_dir))
-
+        result = results['result']
+        bboxes = np.array(result.outputs['bboxes'].float_val).reshape([-1, 4])
+        scores = np.array(result.outputs['scores'].float_val).reshape([-1,])
+        classes = np.array(result.outputs['classes'].int64_val).reshape([-1,])
+        results = ClientAPI.change_image(results, classes, scores, bboxes, label_infomation.ssd_voc_en, change=True)
         return results
 
     @staticmethod
-    def plt_bboxes(img, classes, scores, bboxes, figsize=(10, 10), linewidth=1.5):
+    def change_image(results, classes, scores, bboxes, label, change=False):
+        image_dir = results['abs_img_dir']
+        abs = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+        image = plt.imread(os.path.join(abs, 'media', image_dir))
+        colors = ClientAPI.plt_bboxes(image, classes, scores, bboxes, label, change=change)
+        results['colors'] = ClientAPI.rgb_to_HEX_float(colors)
+        plt.savefig(os.path.join(abs, 'media', image_dir), bbox_inches='tight')
+        return results
+
+    @staticmethod
+    def rgb_to_HEX_float(colors):
+        for key in list(colors.keys()):
+            item = colors[key]
+            color = "#"
+            color += str(hex(int(item[0]*255))).replace('x', '0')[-2:]
+            color += str(hex(int(item[1]*255))).replace('x', '0')[-2:]
+            color += str(hex(int(item[2]*255))).replace('x', '0')[-2:]
+            colors[key] = color
+        return colors
+
+    @staticmethod
+    def rgb_to_HEX_int(colors):
+        for key in list(colors.keys()):
+            item = colors[key]
+            color = "#"
+            color += str(hex(int(item[0]))).replace('x', '0')[-2:]
+            color += str(hex(int(item[1]))).replace('x', '0')[-2:]
+            color += str(hex(int(item[2]))).replace('x', '0')[-2:]
+            colors[key] = color
+        return colors
+
+    @staticmethod
+    def plt_bboxes(img, classes, scores, bboxes, label,
+                   figsize=(10, 10), linewidth=1.5, change=False):
         """Visualize bounding boxes. Largely inspired by SSD-MXNET!
         """
         fig = plt.figure(figsize=figsize)
+
         plt.imshow(img)
         plt.axis('off')
+
+        plt.gca().xaxis.set_major_locator(plt.NullLocator())
+        plt.gca().yaxis.set_major_locator(plt.NullLocator())
+        plt.subplots_adjust(top=1, bottom=0, left=0, right=1, hspace=0, wspace=0)
+        plt.margins(0, 0)
         height = img.shape[0]
         width = img.shape[1]
         colors = dict()
@@ -113,24 +146,22 @@ class ClientAPI(object):
             cls_id = int(classes[i])
             if cls_id >= 0:
                 score = scores[i]
-                if cls_id not in colors:
-                    colors[cls_id] = (random.random(), random.random(), random.random())
+                if label[int(cls_id)] not in colors:
+                    colors[label[int(cls_id)]] = (random.random(), random.random(), random.random())
+                if change:
+                    bboxes[i] *= [height, width, height, width]
                 ymin = int(bboxes[i, 0])
                 xmin = int(bboxes[i, 1])
                 ymax = int(bboxes[i, 2])
                 xmax = int(bboxes[i, 3])
                 rect = plt.Rectangle((xmin, ymin), xmax - xmin,
                                      ymax - ymin, fill=False,
-                                     edgecolor=colors[cls_id],
+                                     edgecolor=colors[label[int(cls_id)]],
                                      linewidth=linewidth)
                 plt.gca().add_patch(rect)
-                class_name = str(cls_id)
+                class_name = str(label[int(cls_id)])
                 plt.gca().text(xmin, ymin - 2,
                                '{:s} | {:.3f}'.format(class_name, score),
-                               bbox=dict(facecolor=colors[cls_id], alpha=0.5),
+                               bbox=dict(facecolor=colors[label[int(cls_id)]], alpha=0.5),
                                fontsize=12, color='white')
-
-
-if __name__ == '__main__':
-    api = ClientAPI()
-    api.send_request('/Users/darrenpang/Documents/图片/goldfish.jpeg')
+        return colors

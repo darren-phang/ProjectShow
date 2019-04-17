@@ -170,5 +170,4 @@ STATICFILES_DIRS = (
 )
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # 设置静态文件路径为主目录下的media文件夹
-print("darren:", MEDIA_ROOT)
 MEDIA_URL = 'ProjectShow/media/'
