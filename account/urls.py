@@ -1,17 +1,18 @@
 from django.conf.urls import url
 from django.contrib.auth import views as auth_views
-
 from . import views
+import home.views
 
 urlpatterns = [
     url(r"^login/$", auth_views.login, {"template_name": "account/login.html"}, name="user_login"),
 
-    url(r'^logout/$', auth_views.logout, {"template_name": "account/logout.html"},
+    url(r'^logout/$', auth_views.logout, {"next_page": 'index_home'
+        , "template_name": "account/logout.html"},
         name='user_logout'),
 
     url(r'^register/$', views.register, name="user_register"),
 
-    url(r'^password-change/$', auth_views.password_change,
+    url(r'^password-change/$', views.password_change,
         {"post_change_redirect": "/account/password-change-done"}, name='password_change'),
     url(r'^password-change-done/$', auth_views.password_change_done, name='password_change_done'),
 

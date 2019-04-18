@@ -19,4 +19,5 @@ import contact.views as view
 
 urlpatterns = [
     path('', view.index, name='contact_home'),
+    path('send_message', view.send_message, name='send_message')
 ]

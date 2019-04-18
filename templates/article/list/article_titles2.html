@@ -44,17 +44,22 @@
     </div>
 </section>
 
-<section class="ftco-section services-section bg-light">
-    <div class="container">
+<section class="services-section bg-light" >
+    <div class="container" style="text-align:center">
         <div class="row d-flex">
-            <div class="col-md-3 d-flex align-self-stretch ftco-animate">
+            <div class="col-md-3 d-flex align-self-stretch ftco-animate center">
                 <div class="media block-6 services d-block">
-                    <div class="icon"><span class="flaticon-yatch" href="{% url 'article:article_post'%}"></span></div>
+                    <div class="icon">
+                        <a href="{% url 'article:article_post' %}">
+                          <span class="flaticon-yatch" href="{% url 'article:article_post' %}"></span>
+                        </a>
+                    </div>
                     <div class="media-body">
-                        <a class="heading mb-3" href="{% url 'article:article_post'%}">发表文章</a>
+                        <a class="heading mb-3" href="{% url 'article:article_post' %}">发表文章</a>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </section>

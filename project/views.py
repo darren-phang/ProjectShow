@@ -25,7 +25,8 @@ def index(request):
         project = project_page.object_list
     return render(request, "project/project.html",
                   {"projects": project, "page": project_page,
-                   "total_pages": list(range(1, int(ProjectPost.objects.count() / 6 + 2)))})
+                   "total_pages": list(range(1, int(ProjectPost.objects.count() / 6 + 2))),
+                   })
 
 
 def project_show_page(request, id, type):

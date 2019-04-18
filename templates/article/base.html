@@ -6,8 +6,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-{#    <link href="{% static 'images/icon.png' %}" rel="SHORTCUT ICON">#}
     {% block title%} {% endblock title %}
     {% bootstrap_css %}
     <style type="text/css">
@@ -34,8 +32,7 @@
 {% include "css_include.html" %}
 {% include 'header.html' %}
 
-<div class="js-fullheight" style="background-image: url( {% static 'images/home_bg.jpg' %});
-        height: 90px;">
+<div style="height: 100px; background: #222831;">
 </div>
 <br><br>
 <div class="container">
@@ -52,6 +49,7 @@
     </div>
 </div>
 {% include 'footer.html' %}
+{% include "js_include.html" %}
 
 {% bootstrap_javascript %}
 </body>

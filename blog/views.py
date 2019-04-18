@@ -9,7 +9,7 @@ from article.models import ArticleColumn, ArticlePost, ArticleTag
 def index(request):
     # articles = ArticlePost.objects.filter(author=request.user)
     # return render(request, "article/column/article_list.html", {"articles":articles})
-    articles_list = ArticlePost.objects.filter(author=request.user)
+    articles_list = ArticlePost.objects.filter()
     paginator = Paginator(articles_list, 6)
     page = request.GET.get('page')
     try:

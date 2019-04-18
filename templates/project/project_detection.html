@@ -2,6 +2,21 @@
 <!DOCTYPE html>
 <html lang="en">
 {% include "css_include.html" %}
+<style>
+    .con{position:relative;height:1.875rem;line-height: 1.875rem;margin:2.47rem auto;text-align: center;}
+        .con i{display:block;height:1px;background:#e1e1e1;position:absolute;top:0.9rem;width:100%;}
+        .con p{
+            display:inline-block;
+            font-size: 0.75rem;
+            color: #ffffff;
+            {#background:rgba(240,240,240,1);#}
+            padding:0 1.875rem;
+            text-align: center;
+            margin:0 auto;
+            position:relative;
+            z-index:2;}
+
+</style>
 <body>
 {% include "header.html" %}
 
@@ -25,7 +40,10 @@
     <div class="one-half ftco-animate">
         <div>
             {% for id,color in infos.items %}
-                <p><div align="center"><hr width="20%" color="{{ color }}" size="1">{{ id }}</div></p>
+                <div class="con">
+                    <i style="background: {{ color }}"></i>
+                    <p style="background: {{ color }};">{{ id }}</p>
+                </div>
             {% endfor %}
         </div>
     </div>
@@ -51,7 +69,6 @@
 {% include "js_include.html" %}
 
 <script type="text/javascript">
-
     function validate_required(field, alerttxt) {
         with (field) {
             if (value == null || value == "") {

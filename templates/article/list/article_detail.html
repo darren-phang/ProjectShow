@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "article/base.html" %}
 
 {% load article_tags %}
 {% load staticfiles %}
@@ -171,8 +171,11 @@
                     layer.msg("你已经点过赞了哦");
                 }else if(e == "3"){
                     layer.msg("你之前没有点赞哦");
+                }else {
+                    layer.msg("请先登录");
                 }
             },
+
         });
     }
 </script>

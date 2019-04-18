@@ -28,3 +28,9 @@ class ProjectPost(models.Model):
 
     def get_project_url(self):
         return reverse("project_show", args=[self.id, self.type])
+
+    def get_star_list(self):
+        return list(range(int(self.star)))
+
+    def get_none_star_list(self):
+        return list(range(5-int(self.star)))

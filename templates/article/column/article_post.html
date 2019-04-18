@@ -42,9 +42,10 @@
                 <textarea style="display:none;" id="id_body"></textarea>
             </div>
         </div>
-        <div class="row">
+        <div class="row" style="float: right">
             <input type="button" class="btn btn-primary btn-lg" value="发布"
-                   onclick="publish_article()">
+               style="width: 150px;"
+               onclick="publish_article()">
         </div>
     </form>
 </div>
@@ -73,7 +74,7 @@
             success: function (e) {
                 if (e == "1") {
                     layer.msg("successful");
-                    location.href = "{% url 'article:article_list' %}";
+                    location.href = "{% url 'blog_home' %}";
                 } else if (e == "2") {
                     layer.msg("sorry.");
                 } else {
@@ -81,6 +82,7 @@
                 }
             },
         });
+        {#document.getElementById("link_blog").click();#}
     }
 
     $(function () {

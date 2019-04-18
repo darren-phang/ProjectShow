@@ -124,11 +124,13 @@
                                     <div class="one">
                                         <h3><a href="{{ project.get_project_url }}">{{ project.title }}</a></h3>
                                         <p class="rate">
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star"></i>
-                                            <i class="icon-star-o"></i>
+                                            {% for i in project.get_star_list %}
+                                                <i class="icon-star"></i>
+                                            {% endfor %}
+                                            {% for i in project.get_none_star_list %}
+                                                <i class="icon-star-o"></i>
+                                            {% endfor %}
+
                                             <span>{{ project.star }}</span>
                                         </p>
                                     </div>
@@ -143,37 +145,6 @@
                         </div>
                     </div>
                     {% endfor %}
-{#                    <div class="col-sm col-md-6 col-lg-4 ftco-animate">#}
-{#                        <div class="destination">#}
-{#                            <a href="#" class="img img-2 d-flex justify-content-center align-items-center"#}
-{#                               style="background-image: url(../static/images/gan.jpg);">#}
-{#                                <div class="icon d-flex justify-content-center align-items-center">#}
-{#                                    <span class="icon-link"></span>#}
-{#                                </div>#}
-{#                            </a>#}
-{#                            <div class="text p-3">#}
-{#                                <div class="d-flex">#}
-{#                                    <div class="one">#}
-{#                                        <h3><a href="#">图片风格转换</a></h3>#}
-{#                                        <p class="rate">#}
-{#                                            <i class="icon-star"></i>#}
-{#                                            <i class="icon-star"></i>#}
-{#                                            <i class="icon-star"></i>#}
-{#                                            <i class="icon-star"></i>#}
-{#                                            <i class="icon-star-o"></i>#}
-{#                                            <span>8 Rating</span>#}
-{#                                        </p>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                                <p>运用对抗生成网络，将图片转换为任意风格。轻松获得高逼格图片</p>#}
-{#                                <hr>#}
-{#                                <p class="bottom-area d-flex">#}
-{#                                    <span><i class="icon-map-o"></i> Google</span>#}
-{#                                    <span class="ml-auto"><a href="#">了解更多</a></span>#}
-{#                                </p>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </div>#}
                 </div>
 
                 <div class="row mt-5">
