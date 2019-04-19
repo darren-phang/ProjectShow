@@ -1,13 +1,14 @@
-from django.shortcuts import render
+import json
+import os
+
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
+import project.client as client
+from project.models import Inception
 # Create your views here.
 from .models import ProjectPost
-from project.models import Inception
-import project.client as client
-import os
-import json
 
 
 def index(request):
@@ -30,17 +31,23 @@ def index(request):
 
 
 def project_show_page(request, id, type):
+    if id == 5:
+        return HttpResponseRedirect('http://a.vmall.com/uowap/index.html#/detailApp/C100279569')
+    elif id == 4:
+        return HttpResponseRedirect('http://v.qq.com/x/page/b0657jz3rjl.html')
+
     project = get_object_or_404(ProjectPost, id=id)
+    dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     if request.method == 'POST':
         new_img = Inception(
             img=request.FILES.get('img'),
             name=request.FILES.get('img').name,
         )
+
         new_img.save()
         img_id = new_img.id
         obj = Inception.objects.get(id=img_id)
         img_dir = obj.img
-        dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         api = client.ClientAPI(host=project.address, port=project.port)
 
     if type == 'classification':
@@ -61,6 +68,9 @@ def project_show_page(request, id, type):
                 'img_dir': 'image/default_image_for_inception.jpeg',
                 'predict': {}
             }
+        print("\n--classification--" + os.path.join(dir_path, 'media', content['img_dir']) + "\n")
+        # os.chmod(os.path.join(dir_path, 'media', content['img_dir']), stat.S_IRWXU|stat.S_IRGRP|stat.S_IROTH)
+       # os.popen("chmod 666 " + os.path.join(dir_path, 'media', content['img_dir'])).readlines()
         return render(request, 'project/project_classification.html', content)
 
     if type == 'detection':
@@ -85,6 +95,9 @@ def project_show_page(request, id, type):
                 'img_dir': 'image/default_image_for_inception.jpeg',
                 'infos': {}
             }
+        print("\n--detection--" + os.path.join(dir_path, 'media', content['img_dir']) + "\n")
+        # os.chmod(os.path.join(dir_path, 'media', content['img_dir']), stat.S_IRWXU|stat.S_IRGRP|stat.S_IROTH)
+        #os.popen("chmod 666 " + os.path.join(dir_path, 'media', content['img_dir'])).readlines()
         return render(request, 'project/project_detection.html', content)
 
     if type == 'APP':

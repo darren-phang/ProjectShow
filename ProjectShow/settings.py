@@ -23,7 +23,7 @@ SECRET_KEY = '&#p0#emjyh)pcyyk$bf3cl_-2#a8*z7brn^un(y_o(lj0q7)uo'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*', '39.108.183.209']
+ALLOWED_HOSTS = ["39.108.183.209", "www.strivexj.com", "strivexj.com", "127.0.0.1", "*", ]
 
 # Application definition
 
@@ -37,14 +37,14 @@ INSTALLED_APPS = [
 
     'bootstrap3',
 
-    'media',
+
     'blog',
     'contact',
     'home',
     'project',
     'account',
     'article',
-
+    'timetable',
     'rest_framework'
 ]
 
@@ -83,14 +83,24 @@ WSGI_APPLICATION = 'ProjectShow.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',  # 加载驱动
+#         'NAME': 'ProjectShow',  # 数据库名
+#         'USER': 'root',  # mysql的用户名
+#         'PASSWORD': 'pwh19990228',  # mysql的密码
+#         'HOST': 'localhost',  # 连接地址（本地的话使用localhost或者127.0.0.1）
+#         'PORT': 3306  # 数据库服务的端口号
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',  # 加载驱动
-        'NAME': 'ProjectShow',  # 数据库名
-        'USER': 'root',  # mysql的用户名
-        'PASSWORD': 'pwh19990228',  # mysql的密码
-        'HOST': 'localhost',  # 连接地址（本地的话使用localhost或者127.0.0.1）
-        'PORT': 3306  # 数据库服务的端口号
+        'ENGINE': 'django.db.backends.mysql',  # 数据库引擎
+        'NAME': 'mysite',  # 数据库名，先前创建的
+        'USER': 'root',  # 用户名，可以自己创建用户
+        'PASSWORD': 'strive123',  # 密码
+        'HOST': 'localhost',  # mysql服务所在的主机ip
+        'PORT': '3306',  # mysql服务端口
     }
 }
 
@@ -117,7 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
