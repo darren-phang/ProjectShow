@@ -1,6 +1,6 @@
-from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 from .models import ProjectPost
@@ -29,8 +29,10 @@ def index(request):
                    })
 
 
+@csrf_exempt
 def project_show_page(request, id, type):
     project = get_object_or_404(ProjectPost, id=id)
+    dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     if request.method == 'POST':
         new_img = Inception(
             img=request.FILES.get('img'),
@@ -40,14 +42,13 @@ def project_show_page(request, id, type):
         img_id = new_img.id
         obj = Inception.objects.get(id=img_id)
         img_dir = obj.img
-        dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         api = client.ClientAPI(host=project.address, port=project.port)
 
     if type == 'classification':
         if request.method == 'POST':
             result = api.send_request(
                 os.path.join(dir_path, 'media', str(img_dir)), project.model_name,
-                project.signature_name, project.input_tensor_name, restore=False)
+                project.signature_name, project.input_tensor_name)
             label_and_percentage = api.classification_result(result)
             label_and_percentage_str = json.dumps(label_and_percentage)
             obj.predict = label_and_percentage_str
@@ -56,6 +57,7 @@ def project_show_page(request, id, type):
                 'img_dir': str(result['abs_img_dir']),
                 'predict': json.loads(label_and_percentage_str)
             }
+            return HttpResponse(get_change(render(request, 'project/project_classification.html', content).content))
         else:
             content = {
                 'img_dir': 'image/default_image_for_inception.jpeg',
@@ -70,8 +72,7 @@ def project_show_page(request, id, type):
                 other_k['min_face_size_input:float'] = 18
             result = api.send_request(
                 os.path.join(dir_path, 'media', str(img_dir)), project.model_name,
-                project.signature_name, project.input_tensor_name, other_k=other_k,
-                restore=False)
+                project.signature_name, project.input_tensor_name, other_k=other_k)
             if project.model_name == 'face':
                 api.detection_result_face(result)
             elif project.model_name == 'ssd':
@@ -80,6 +81,7 @@ def project_show_page(request, id, type):
                 'img_dir': str(result['abs_img_dir']),
                 'infos': result['colors']
             }
+            return HttpResponse(get_change(render(request, 'project/project_detection.html', content).content))
         else:
             content = {
                 'img_dir': 'image/default_image_for_inception.jpeg',
@@ -89,3 +91,9 @@ def project_show_page(request, id, type):
 
     if type == 'APP':
         pass
+
+
+def get_change(html):
+    html = html.decode()
+    html_return = html[html.find("<section"):html.find("section>") + 8]
+    return html_return

@@ -7,7 +7,7 @@
 {% include "header.html" %}
 
 <!-- END nav -->
-<div class="hero-wrap js-fullheight" style="background-image: url('{% static "images/bg_1.jpg" %}');">
+<div class="hero-wrap js-fullheight" style="background-image: url('{% static "images/jingzhiyuan1.jpg" %}');">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center"
@@ -19,27 +19,39 @@
     </div>
 </div>
 
-<section class="ftco-about d-md-flex">
-    <div class="one-half" style="padding: 0">
-        <img src="../../../{{ MEDIA_URL }}{{ img_dir }}" width="100%" height="100%">
-    </div>
-    <div class="one-half ftco-animate">
-        <div>
-            {% for k,row in predict.items %}
-                <li>{{ k }}-{{ row }}</li>
-            {% endfor %}
+<div id="result_show">
+    <section class="ftco-about d-md-flex">
+        <div class="one-half" style="padding: 0">
+            <img src="../../../{{ MEDIA_URL }}{{ img_dir }}" width="100%" height="100%">
         </div>
-    </div>
-</section>
+        <div class="one-half ftco-animate fadeInUp ftco-animated">
+            <div>
+                {% for k,row in predict.items %}
+                    <li>{{ k }}-{{ row }}</li>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+</div>
+
 <section class="ftco-section-parallax">
+    <div class="d-flex align-items-center" style="padding: 10px;margin: 20px;">
+        <div class="container">
+            <div class="row d-flex justify-content-center">
+                <progress id="progressBar" value="0" max="100" style="width :70%;"></progress>
+            </div>
+        </div>
+
+    </div>
     <div class="d-flex align-items-center" style="padding: 10px;margin: 20px">
         <div class="container">
             <div class="row d-flex justify-content-center">
-                <form method="POST" enctype="multipart/form-data" onsubmit="return validate_form(this)">
-                    {% csrf_token %}
-                    <label class="btn btn-primary py-3 px-5" for="xFile">选择图片</label>
-                    <input type="file" accept="image/*" name="img" id="xFile" style="position:absolute;clip:rect(0 0 0 0);">
-                    <button type="submit" class="btn btn-primary py-3 px-5">开始识别</button>
+                <form method="POST" enctype="multipart/form-data">
+                    <label class="btn btn-primary py-3 px-5" for="file">选择图片</label>
+                    <input type="file" accept="image/*" name="img" id="file"
+                           style="position:absolute;clip:rect(0 0 0 0);">
+                    <input type="button" class="btn btn-primary py-3 px-5" value="开始识别"
+                    onclick="UpladFile()"/>
                 </form>
             </div>
         </div>
@@ -51,29 +63,6 @@
 
 {% include "js_include.html" %}
 
-<script type="text/javascript">
-
-    function validate_required(field, alerttxt) {
-        with (field) {
-            if (value == null || value == "") {
-                alert(alerttxt);
-                return false
-            }
-            else {
-                return true
-            }
-        }
-    }
-
-    function validate_form(thisform) {
-        with (thisform) {
-            if (validate_required(img, "Please choose a picture at least!") == false) {
-                img.focus();
-                return false
-            }
-        }
-    }
-</script>
 </body>
 
 </html>

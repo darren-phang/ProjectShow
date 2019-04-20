@@ -9,7 +9,9 @@ import random
 import project.label_information as label_infomation
 import matplotlib.pyplot as plt
 from skimage import transform
-import os
+import os, stat
+from PIL import Image
+from io import StringIO, BytesIO
 
 
 class ClientAPI(object):
@@ -18,24 +20,12 @@ class ClientAPI(object):
         self.port = port
 
     def send_request(self, image_dir, model_name, signature_name,
-                     input_name, restore=True, other_k=None):
+                     input_name, other_k=None):
         x = time.time()
         channel = implementations.insecure_channel(self.host, int(self.port))
-
         stub = prediction_service_pb2.beta_create_PredictionService_stub(channel)
-        abs_img_dir = ''
-        # 打开图片并裁剪成600*600
-        if restore:
-            image_name = image_dir.split('/')[-1].split('.')[0]
-            image_restore = np.array(plt.imread(image_dir))
-            img_resize = transform.resize(image_restore, (500, 750))
-            abs = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-            abs_img_dir = 'image_adjust/' + image_name + '_adjust.jpg'
-            plt.imsave(os.path.join(abs, 'media', abs_img_dir), img_resize)
-            image = open(os.path.join(abs, 'media', abs_img_dir), 'rb').read()
-        else:
-            image = open(image_dir, 'rb').read()
-            abs_img_dir = 'image/' + image_dir.split('/')[-1]
+        image, scale = change_image_h_w(image_dir)
+        abs_img_dir = 'image/' + image_dir.split('/')[-1]
         request = predict_pb2.PredictRequest()
         # 端口里面的名字什么的，设置的第一级为test，第二级为predict_images
         request.model_spec.name = model_name
@@ -53,7 +43,9 @@ class ClientAPI(object):
 
         result = stub.Predict(request, 90.0)  # 时限
         # 处理返回的信息
-        results = {'result': result, 'abs_img_dir': abs_img_dir}
+        results = {'result': result,
+                   'abs_img_dir': abs_img_dir,
+                   'scale': scale}
         return results
 
     @staticmethod
@@ -76,8 +68,10 @@ class ClientAPI(object):
         for i in range(boexes.shape[0]):
             classes.append(1)
             scores.append(boexes[i, 4])
-            bboxes.append(np.array([boexes[i, 1], boexes[i, 0],
-                                   boexes[i, 3], boexes[i, 2]]))
+            bboxes.append(np.array([boexes[i, 1]*results['scale'],
+                                    boexes[i, 0]*results['scale'],
+                                    boexes[i, 3]*results['scale'],
+                                    boexes[i, 2]*results['scale']]))
         classes = np.array(classes)
         scores = np.array(scores)
         bboxes = np.array(bboxes)
@@ -101,6 +95,7 @@ class ClientAPI(object):
         colors = ClientAPI.plt_bboxes(image, classes, scores, bboxes, label, change=change)
         results['colors'] = ClientAPI.rgb_to_HEX_float(colors)
         plt.savefig(os.path.join(abs, 'media', image_dir), bbox_inches='tight')
+        os.chmod(os.path.join(abs, 'media', image_dir), stat.S_IRWXO | stat.S_IRWXU)
         return results
 
     @staticmethod
@@ -142,6 +137,9 @@ class ClientAPI(object):
         height = img.shape[0]
         width = img.shape[1]
         colors = dict()
+        show_caption = True
+        if len(classes) > 15:
+            show_caption = False
         for i in range(classes.shape[0]):
             cls_id = int(classes[i])
             if cls_id >= 0:
@@ -159,9 +157,25 @@ class ClientAPI(object):
                                      edgecolor=colors[label[int(cls_id)]],
                                      linewidth=linewidth)
                 plt.gca().add_patch(rect)
-                class_name = str(label[int(cls_id)])
-                plt.gca().text(xmin, ymin - 2,
-                               '{:s} | {:.3f}'.format(class_name, score),
-                               bbox=dict(facecolor=colors[label[int(cls_id)]], alpha=0.5),
-                               fontsize=12, color='white')
+                if show_caption:
+                    class_name = str(label[int(cls_id)])
+                    plt.gca().text(xmin, ymin - 2,
+                                   '{:s} | {:.3f}'.format(class_name, score),
+                                   bbox=dict(facecolor=colors[label[int(cls_id)]], alpha=0.5),
+                                   fontsize=12, color='white')
         return colors
+
+
+def change_image_h_w(image_dir):
+    img = Image.open(image_dir)
+    w, h = img.size
+    max_h_w = max(h, w)
+    s = BytesIO()
+    if max_h_w > 1000:
+        scale = max_h_w/1000
+        img = img.resize((int(w/scale), int(h/scale)))
+        img.save(s, format='JPEG')
+    else:
+        img.save(s, format='JPEG')
+        scale = 1
+    return s.getvalue(), scale
