@@ -10,16 +10,10 @@ import tensorflow.contrib.util as util
 from grpc.beta import implementations
 from skimage import transform
 from tensorflow_serving.apis import predict_pb2, prediction_service_pb2
-
 import project.label_information as label_infomation
-<<<<<<< HEAD
-import matplotlib.pyplot as plt
-from skimage import transform
 import os, stat
 from PIL import Image
 from io import StringIO, BytesIO
-=======
->>>>>>> b0ebf6a79fc82ba7028c3389648662f787b528c3
 
 
 class ClientAPI(object):
@@ -32,36 +26,13 @@ class ClientAPI(object):
         x = time.time()
         channel = implementations.insecure_channel(self.host, int(self.port))
         stub = prediction_service_pb2.beta_create_PredictionService_stub(channel)
-<<<<<<< HEAD
         image, scale = change_image_h_w(image_dir)
         abs_img_dir = 'image/' + image_dir.split('/')[-1]
-=======
-        abs_img_dir = ''
-        # 打开图片并裁剪成600*600
-        if restore:
-            image_name = image_dir.split('/')[-1].split('.')[0]
-            image_restore = np.array(plt.imread(image_dir))
-            img_resize = transform.resize(image_restore, (500, 750))
-            abs = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-            abs_img_dir = 'image_adjust/' + image_name + '_adjust.jpg'
-            plt.imsave(os.path.join(abs, 'media', abs_img_dir), img_resize)
-            # image = open(os.path.join(abs, 'media', abs_img_dir), 'rb').read()
-            with open(os.path.join(abs, 'media', abs_img_dir), 'rb')as f:
-                image = f.read()
-                return self.process(abs_img_dir, image, input_name, model_name, other_k,
-                                    signature_name,
-                                    stub)
-        else:
-            # image =open(image_dir, 'rb').read()
-            with open(image_dir, 'rb')as f:
-                image = f.read()
-                abs_img_dir = 'image/' + image_dir.split('/')[-1]
-                return self.process(abs_img_dir, image, input_name, model_name, other_k,
-                                    signature_name,
-                                    stub)
+        return self.process(abs_img_dir, image, input_name, model_name, other_k,
+                            signature_name,
+                            stub, scale)
 
-    def process(self, abs_img_dir, image, input_name, model_name, other_k, signature_name, stub):
->>>>>>> b0ebf6a79fc82ba7028c3389648662f787b528c3
+    def process(self, abs_img_dir, image, input_name, model_name, other_k, signature_name, stub, scale):
         request = predict_pb2.PredictRequest()
         # 端口里面的名字什么的，设置的第一级为test，第二级为predict_images
         request.model_spec.name = model_name
@@ -103,15 +74,10 @@ class ClientAPI(object):
         for i in range(boexes.shape[0]):
             classes.append(1)
             scores.append(boexes[i, 4])
-<<<<<<< HEAD
             bboxes.append(np.array([boexes[i, 1]*results['scale'],
                                     boexes[i, 0]*results['scale'],
                                     boexes[i, 3]*results['scale'],
                                     boexes[i, 2]*results['scale']]))
-=======
-            bboxes.append(np.array([boexes[i, 1], boexes[i, 0],
-                                    boexes[i, 3], boexes[i, 2]]))
->>>>>>> b0ebf6a79fc82ba7028c3389648662f787b528c3
         classes = np.array(classes)
         scores = np.array(scores)
         bboxes = np.array(bboxes)

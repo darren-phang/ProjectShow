@@ -70,8 +70,6 @@ def project_show_page(request, id, type):
                 'predict': {}
             }
         print("\n--classification--" + os.path.join(dir_path, 'media', content['img_dir']) + "\n")
-        # os.chmod(os.path.join(dir_path, 'media', content['img_dir']), stat.S_IRWXU|stat.S_IRGRP|stat.S_IROTH)
-       # os.popen("chmod 666 " + os.path.join(dir_path, 'media', content['img_dir'])).readlines()
         return render(request, 'project/project_classification.html', content)
 
     if type == 'detection':

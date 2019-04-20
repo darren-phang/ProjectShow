@@ -96,9 +96,9 @@ WSGI_APPLICATION = 'ProjectShow.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # 数据库引擎
-        'NAME': 'mysite',  # 数据库名，先前创建的
+        'NAME': 'ProjectShow',  # 数据库名，先前创建的
         'USER': 'root',  # 用户名，可以自己创建用户
-        'PASSWORD': 'strive123',  # 密码
+        'PASSWORD': 'pwh19990228',  # 密码
         'HOST': 'localhost',  # mysql服务所在的主机ip
         'PORT': '3306',  # mysql服务端口
     }
