@@ -1,15 +1,8 @@
-<<<<<<< HEAD
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import render, get_object_or_404, HttpResponse
+from django.shortcuts import render, get_object_or_404, HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
-=======
 import json
 import os
-
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
->>>>>>> b0ebf6a79fc82ba7028c3389648662f787b528c3
 
 import project.client as client
 from project.models import Inception
