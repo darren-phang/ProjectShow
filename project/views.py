@@ -63,6 +63,7 @@ def project_show_page(request, id, type):
                 'img_dir': str(result['abs_img_dir']),
                 'predict': json.loads(label_and_percentage_str)
             }
+            print("\n--classification--" + os.path.join(dir_path, 'media', content['img_dir']) + "\n")
             return HttpResponse(get_change(render(request, 'project/project_classification.html', content).content))
         else:
             content = {
@@ -88,6 +89,7 @@ def project_show_page(request, id, type):
                 'img_dir': str(result['abs_img_dir']),
                 'infos': result['colors']
             }
+            print("\n--detection--" + os.path.join(dir_path, 'media', content['img_dir']) + "\n")
             return HttpResponse(get_change(render(request, 'project/project_detection.html', content).content))
         else:
             content = {
@@ -95,7 +97,6 @@ def project_show_page(request, id, type):
                 'infos': {}
             }
         print("\n--detection--" + os.path.join(dir_path, 'media', content['img_dir']) + "\n")
-        # os.chmod(os.path.join(dir_path, 'media', content['img_dir']), stat.S_IRWXU|stat.S_IRGRP|stat.S_IROTH)
         #os.popen("chmod 666 " + os.path.join(dir_path, 'media', content['img_dir'])).readlines()
         return render(request, 'project/project_detection.html', content)
 

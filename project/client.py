@@ -20,6 +20,7 @@ class ClientAPI(object):
     def __init__(self, host='39.108.183.209', port='9000'):
         self.host = host
         self.port = port
+        self.dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     def send_request(self, image_dir, model_name, signature_name,
                      input_name, other_k=None):
@@ -52,6 +53,7 @@ class ClientAPI(object):
         results = {'result': result,
                    'abs_img_dir': abs_img_dir,
                    'scale': scale}
+        os.popen("chmod 777 " + os.path.join(self.dir_path, 'media', abs_img_dir)).readlines()
         return results
 
     @staticmethod
@@ -174,15 +176,17 @@ class ClientAPI(object):
 
 
 def change_image_h_w(image_dir):
-    img = Image.open(image_dir)
-    w, h = img.size
-    max_h_w = max(h, w)
-    s = BytesIO()
-    if max_h_w > 1000:
-        scale = max_h_w/1000
-        img = img.resize((int(w/scale), int(h/scale)))
-        img.save(s, format='JPEG')
-    else:
-        img.save(s, format='JPEG')
-        scale = 1
-    return s.getvalue(), scale
+    with Image.open(image_dir) as img:
+        w, h = img.size
+        max_h_w = max(h, w)
+        s = BytesIO()
+        if max_h_w > 1000:
+            scale = max_h_w/1000
+            img = img.resize((int(w/scale), int(h/scale)))
+            img.save(s, format='JPEG')
+        else:
+            img.save(s, format='JPEG')
+            scale = 1
+        value = s.getvalue()
+        s.close()
+    return value, scale
