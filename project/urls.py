@@ -22,4 +22,8 @@ urlpatterns = [
     path('', view.index, name='project_home'),
     path('project_show/<int:id>/<str:type>/', view.project_show_page,
          name='project_show'),
+    path('classification/<int:id>/', view.get_response_classification,
+         name='classification'),
+    path('detection/<int:id>/', view.get_response_detection,
+         name='detection'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

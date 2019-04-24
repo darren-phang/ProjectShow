@@ -37,81 +37,75 @@ def project_show_page(request, id, type):
     elif id == 4:
         return HttpResponseRedirect('http://v.qq.com/x/page/b0657jz3rjl.html')
 
-    project = get_object_or_404(ProjectPost, id=id)
-    dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    if request.method == 'POST':
-        new_img = Inception(
-            img=request.FILES.get('img'),
-            name=request.FILES.get('img').name,
-        )
-        new_img.save()
-        img_id = new_img.id
-        obj = Inception.objects.get(id=img_id)
-        img_dir = obj.img
-        abs_image_dir = client.change_image_path(os.path.join(dir_path, 'media', 'image'),
-                                                 str(img_dir).split('/')[-1], str(id))
-        api = client.ClientAPI(host=project.address, port=project.port)
-
     if type == 'classification':
-        if request.method == 'POST':
-            result = api.send_request(
-                abs_image_dir, project.model_name,
-                project.signature_name, project.input_tensor_name, _id=str(id))
-            label_and_percentage = api.classification_result(result)
-            label_and_percentage_str = json.dumps(label_and_percentage)
-            obj.predict = label_and_percentage_str
-            obj.save()
-            content = {
-                'img_dir': str(result['abs_img_dir']),
-                'predict': json.loads(label_and_percentage_str)
-            }
-            print("\n--classification--" + os.path.join(dir_path, 'media', content['img_dir']) + "\n")
-            return JsonResponse(label_and_percentage)
-        else:
-            content = {
-                'img_dir': 'image/default_image_for_inception.jpeg',
-                'predict': {}
-            }
-        print("\n--classification--" + os.path.join(dir_path, 'media', content['img_dir']) + "\n")
-        return render(request, 'project/project_classification.html', content)
+        return render(request, 'project/project_classification.html')
 
     if type == 'detection':
-        if request.method == 'POST':
-            other_k = {}
-            if project.model_name == 'face':
-                other_k['min_face_size_input:float'] = 18
-            result = api.send_request(
-                abs_image_dir, project.model_name,
-                project.signature_name, project.input_tensor_name,
-                other_k=other_k, _id=str(id))
-            if project.model_name == 'face':
-                # api.detection_result_face(result)
-                detection_response = api.detection_result_face(result)
-            elif project.model_name == 'ssd':
-                detection_response = api.detection_result_ssd(result)
-            return JsonResponse(detection_response)
-        else:
-            content = {
-                'img_dir': 'image/default_image_for_inception.jpeg',
-                'infos': {}
-            }
-        print("\n--detection--" + os.path.join(dir_path, 'media', content['img_dir']) + "\n")
-        return render(request, 'project/project_detection.html', content)
+        return render(request, 'project/project_detection.html')
 
     if type == 'APP':
         pass
 
 
-def get_html_for_detection(html):
-    html = html.decode()
-    html_return = html[html.find("<section"):html.find("section>") + 8]
-    return html_return
+@csrf_exempt
+def get_response_classification(request, id):
+    if request.method != "POST":
+        return
+    project = get_object_or_404(ProjectPost, id=id)
+    dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    new_img = Inception(
+        img=request.FILES.get('img'),
+        name=request.FILES.get('img').name,
+    )
+    new_img.save()
+    img_id = new_img.id
+    obj = Inception.objects.get(id=img_id)
+    img_dir = obj.img
+    abs_image_dir = client.change_image_path(os.path.join(dir_path, 'media', 'image'),
+                                             str(img_dir).split('/')[-1], str(id))
+    api = client.ClientAPI(host=project.address, port=project.port)
+    result = api.send_request(
+        abs_image_dir, project.model_name,
+        project.signature_name, project.input_tensor_name, _id=str(id))
+    label_and_percentage = api.classification_result(result)
+    label_and_percentage_str = json.dumps(label_and_percentage)
+    obj.predict = label_and_percentage_str
+    obj.save()
+    content = {
+        'img_dir': str(result['abs_img_dir']),
+        'predict': json.loads(label_and_percentage_str)
+    }
+    print("\n--classification--" + os.path.join(dir_path, 'media', content['img_dir']) + "\n")
+    return JsonResponse(label_and_percentage)
 
 
-def get_html_for_classification(content):
-    predict = content["predict"]
-    html = ""
-    for pre in predict:
-        _str = "<li>" + pre + "-" + str(predict[pre]) + "</li>\n"
-        html += _str
-    return html
+@csrf_exempt
+def get_response_detection(request, id):
+    if request.method != "POST":
+        return
+    project = get_object_or_404(ProjectPost, id=id)
+    dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    new_img = Inception(
+        img=request.FILES.get('img'),
+        name=request.FILES.get('img').name,
+    )
+    new_img.save()
+    img_id = new_img.id
+    obj = Inception.objects.get(id=img_id)
+    img_dir = obj.img
+    abs_image_dir = client.change_image_path(os.path.join(dir_path, 'media', 'image'),
+                                             str(img_dir).split('/')[-1], str(id))
+    api = client.ClientAPI(host=project.address, port=project.port)
+    other_k = {}
+    if project.model_name == 'face':
+        other_k['min_face_size_input:float'] = 18
+    result = api.send_request(
+        abs_image_dir, project.model_name,
+        project.signature_name, project.input_tensor_name,
+        other_k=other_k, _id=str(id))
+    if project.model_name == 'face':
+        # api.detection_result_face(result)
+        detection_response = api.detection_result_face(result)
+    elif project.model_name == 'ssd':
+        detection_response = api.detection_result_ssd(result)
+    return JsonResponse(detection_response)

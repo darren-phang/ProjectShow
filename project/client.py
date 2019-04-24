@@ -99,12 +99,32 @@ class ClientAPI(object):
     @staticmethod
     def detection_result_ssd(results):
         result = results['result']
-        bboxes = np.array(result.outputs['bboxes'].float_val).reshape([-1, 4])
-        scores = np.array(result.outputs['scores'].float_val).reshape([-1, ])
-        classes = np.array(result.outputs['classes'].int64_val).reshape([-1, ])
-        results = ClientAPI.change_image(results, classes, scores, bboxes,
-                                         label_infomation.ssd_voc_en, change=True)
-        return results
+        _bboxes = np.array(result.outputs['bboxes'].float_val).reshape([-1, 4])
+        _scores = np.array(result.outputs['scores'].float_val).reshape([-1, ])
+        _classes = np.array(result.outputs['classes'].int64_val).reshape([-1, ])
+        # results = ClientAPI.change_image(results, classes, scores, bboxes,
+        #                                  label_infomation.ssd_voc_en, change=True)
+        # return results
+        classes = []
+        scores = []
+        bboxes = []
+        for i in range(_bboxes.shape[0]):
+            classes.append(int(_classes[i]))
+            scores.append(_scores[i])
+            bboxes.append([_bboxes[i, 1],
+                           _bboxes[i, 0],
+                           _bboxes[i, 3],
+                           _bboxes[i, 2]])
+        colors = dict()
+        label = label_infomation.ssd_voc_en
+        for i in range(len(classes)):
+            cls_id = int(classes[i])
+            if cls_id >= 0:
+                if label[int(cls_id)] not in colors:
+                    colors[label[int(cls_id)]] = (random.random(), random.random(), random.random())
+
+        return {"classes": classes, "scores": scores, "bboxes": bboxes,
+                "colors": ClientAPI.rgb_to_HEX_float(colors), "name": label_infomation.ssd_voc_en_list}
 
     @staticmethod
     def change_image(results, classes, scores, bboxes, label, change=False):

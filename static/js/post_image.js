@@ -72,8 +72,20 @@ function UpladFile(type) {
         return;
     }
     var fileObj = document.getElementById("file").files[0]; // js 获取文件对象
-    var url = window.location.href; // 接收上传文件的后台地址
-
+    //http://localhost:8000/project/project_show/1/classification/
+    var url = "http://"; // 接收上传文件的后台地址
+    var url_list = window.location.href.split('/');
+    var id = url_list[url_list.length-3];
+    for (var i=2;i<url_list.length-4;i++){
+        url += url_list[i];
+        url += "/";
+    }
+    if (type == 1){
+        url += ("classification/" + id + "/");
+    }
+    if (type == 2){
+        url += ("detection/" + id + "/");
+    }
     var form = new FormData(); // FormData 对象
 
     var quality_set = 16/(fileObj.size/1024/1024);
@@ -128,14 +140,14 @@ function UpladFile(type) {
 function uploadComplete_for_detection(evt) {
     //服务断接收完文件返回的结果
     var response = JSON.parse(evt.target.response);
-    console.log(response);
     load_image_to_canvas(image_url_now,
         response.bboxes,response.classes,response.scores,response.colors,response.name);
     var _html = "";
-    for(var i = 1;i<response.name.length;i++){
-        var _str = "";
-        _str += ("<i style=\"background: " + response.colors[response.name[i]] + ";\"></i>\n");
-        _str += ("<p style=\"background: " + response.colors[response.name[i]] + ";\">" + response.name[i] + "</p>");
+    for(var _name in response.colors){
+        var _str = "<div class=\"con\">";
+        _str += ("<i style=\"background: " + response.colors[_name] + ";\"></i>\n");
+        _str += ("<p style=\"background: " + response.colors[_name] + ";\">" + _name + "</p>");
+        _str += "</div>";
         _html += _str;
     }
     document.getElementById("result_show").innerHTML=_html;
@@ -144,7 +156,7 @@ function uploadComplete_for_detection(evt) {
 function uploadComplete_for_classification(evt) {
     //服务断接收完文件返回的结果
     var response = JSON.parse(evt.target.response);
-    console.log(response);
+    // console.log(response);
     var _html = "";
     for(var _name in response){
         var _str = "";

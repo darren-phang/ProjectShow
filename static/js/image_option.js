@@ -7,8 +7,11 @@ function load_image_to_canvas(image_url, boxes, classes, scores, color, name){
     $(document).ready(function() {
       $("html, body").animate({
           scrollTop: $("#func").offset().top
-      }, {duration: 0, easing: "swing"});
+      }, {duration: 500, easing: "swing"});
     });
+    var progressBar = document.getElementById("progressBar");
+    // event.total是需要传输的总字节，event.loaded是已经传输的字节。如果event.lengthComputable不为真，则event.total等于0
+    progressBar.value = 0;
     const img = new Image();
     // 当图片加载完再动手
     image_url_now = image_url;
@@ -27,12 +30,20 @@ function load_image_to_canvas(image_url, boxes, classes, scores, color, name){
             var _class = classes[i];
             var _name = name[_class];
             ctx.strokeStyle = color[_name];
-            ctx.strokeRect(
-                boxes[i][0],
-                boxes[i][1],
-                (boxes[i][2] - boxes[i][0]),
-                (boxes[i][3] - boxes[i][1])
-            );
+            var max_boxes = Math.max(boxes[i][0], boxes[i][1], boxes[i][2], boxes[i][3]);
+            if (max_boxes <= 1.5){
+                ctx.strokeRect(
+                Math.max(boxes[i][0] * imgWidth, ctx.lineWidth),
+                Math.max(boxes[i][1] * imgHeight, ctx.lineWidth),
+                (Math.min(boxes[i][2], 1-ctx.lineWidth/imgWidth) - Math.max(boxes[i][0], 0)) * imgWidth,
+                (Math.min(boxes[i][3], 1-ctx.lineWidth/imgHeight) - Math.max(boxes[i][1], 0)) * imgHeight)
+            }else{
+                ctx.strokeRect(
+                Math.max(boxes[i][0], ctx.lineWidth),
+                Math.max(boxes[i][1], ctx.lineWidth),
+                (Math.min(boxes[i][2], imgWidth-ctx.lineWidth) - Math.max(boxes[i][0], 0)),
+                (Math.min(boxes[i][3], imgHeight-ctx.lineWidth) - Math.max(boxes[i][1], 0)))
+            }
         }
     };
     img.src = image_url;
