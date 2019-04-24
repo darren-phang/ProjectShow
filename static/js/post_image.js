@@ -1,3 +1,4 @@
+
 /*
     三个参数
     file：一个是文件(类型是图片格式)，
@@ -14,6 +15,7 @@ function photoCompress(file,w,objDiv){
         canvasDataURL(re,w,objDiv)
     }
 }
+
 function canvasDataURL(path, obj, callback){
     var img = new Image();
     img.src = path;
@@ -52,6 +54,7 @@ function canvasDataURL(path, obj, callback){
  * @param urlData
  *            用url方式表示的base64图片数据
  */
+
 function convertBase64UrlToBlob(urlData){
     var arr = urlData.split(','), mime = arr[0].match(/:(.*?);/)[1],
         bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
@@ -64,14 +67,16 @@ function convertBase64UrlToBlob(urlData){
 
 var xhr;
 //上传文件方法
-function UpladFile() {
+function UpladFile(type) {
+    if (validate_required(document.getElementById("file"), "Please choose a picture at least!") == false) {
+        return;
+    }
     var fileObj = document.getElementById("file").files[0]; // js 获取文件对象
     var url = window.location.href; // 接收上传文件的后台地址
 
     var form = new FormData(); // FormData 对象
 
     var quality_set = 16/(fileObj.size/1024/1024);
-    console.log(quality_set);
 
     if(fileObj.size/1024 > 1025) { //大于1M，进行压缩上传
         photoCompress(fileObj, {
@@ -82,7 +87,12 @@ function UpladFile() {
 
             xhr = new XMLHttpRequest();  // XMLHttpRequest 对象
             xhr.open("post", url, true); //post方式，url为服务器请求地址，true 该参数规定请求是否异步处理。
-            xhr.onload = uploadComplete; //请求完成
+            if (type == 1){
+                xhr.onload = uploadComplete_for_classification; //请求完成
+            }
+            if (type == 2){
+                xhr.onload = uploadComplete_for_detection;
+            }
             xhr.onerror =  uploadFailed; //请求失败
 
             xhr.upload.onprogress = progressFunction;//【上传进度调用方法实现】
@@ -90,14 +100,19 @@ function UpladFile() {
                 ot = new Date().getTime();   //设置上传开始时间
                 oloaded = 0;//设置上传开始时，以上传的文件大小为0
             };
-
             xhr.send(form); //开始上传，发送form数据
         });
     }else{ //小于等于1M 原图上传
         form.append("img", fileObj); // 文件对象
         xhr = new XMLHttpRequest();  // XMLHttpRequest 对象
         xhr.open("post", url, true); //post方式，url为服务器请求地址，true 该参数规定请求是否异步处理。
-        xhr.onload = uploadComplete; //请求完成
+        if (type == 1){
+            xhr.onload = uploadComplete_for_classification; //请求完成
+        }
+        if (type == 2){
+            xhr.onload = uploadComplete_for_detection;
+        }
+
         xhr.onerror =  uploadFailed; //请求失败
 
         xhr.upload.onprogress = progressFunction;//【上传进度调用方法实现】
@@ -105,19 +120,40 @@ function UpladFile() {
             ot = new Date().getTime();   //设置上传开始时间
             oloaded = 0;//设置上传开始时，以上传的文件大小为0
         };
-
         xhr.send(form); //开始上传，发送form数据
     }
 }
 
 //上传成功响应
-function uploadComplete(evt) {
+function uploadComplete_for_detection(evt) {
     //服务断接收完文件返回的结果
-    console.log(evt.target.responseText);
-    var show = document.getElementById('result_show');
-    show.innerHTML = evt.target.responseText;
-
+    var response = JSON.parse(evt.target.response);
+    console.log(response);
+    load_image_to_canvas(image_url_now,
+        response.bboxes,response.classes,response.scores,response.colors,response.name);
+    var _html = "";
+    for(var i = 1;i<response.name.length;i++){
+        var _str = "";
+        _str += ("<i style=\"background: " + response.colors[response.name[i]] + ";\"></i>\n");
+        _str += ("<p style=\"background: " + response.colors[response.name[i]] + ";\">" + response.name[i] + "</p>");
+        _html += _str;
+    }
+    document.getElementById("result_show").innerHTML=_html;
 }
+
+function uploadComplete_for_classification(evt) {
+    //服务断接收完文件返回的结果
+    var response = JSON.parse(evt.target.response);
+    console.log(response);
+    var _html = "";
+    for(var _name in response){
+        var _str = "";
+        _str += ("<li>" + _name + "-" + response[_name] + "</li>");
+        _html += _str;
+    }
+    document.getElementById("result_show").innerHTML=_html;
+}
+
 //上传失败
 function uploadFailed(evt) {
     alert("上传失败！");
@@ -144,18 +180,22 @@ function progressFunction(evt) {
     //上传速度计算
     var speed = perload/pertime;//单位b/s
     var bspeed = speed;
-    var units = 'b/s';//单位名称
-    if(speed/1024>1){
-        speed = speed/1024;
-        units = 'k/s';
-    }
-    if(speed/1024>1){
-        speed = speed/1024;
-        units = 'M/s';
-    }
-    speed = speed.toFixed(1);
+
     //剩余时间
-    var resttime = ((evt.total-evt.loaded)/bspeed).toFixed(1);
-    time.innerHTML = '，速度：'+speed+units+'，剩余时间：'+resttime+'s';
+    // var resttime = ((evt.total-evt.loaded)/bspeed).toFixed(1);
+    // time.innerHTML = '，速度：'+speed+units+'，剩余时间：'+resttime+'s';
     if(bspeed==0) time.innerHTML = '上传已取消';
+}
+
+
+function validate_required(field, alerttxt) {
+    with (field) {
+        if (value == null || value == "") {
+            alert(alerttxt);
+            return false
+        }
+        else {
+            return true
+        }
+    }
 }

@@ -7803,10 +7803,10 @@ h1, h2, h3, h4, h5,
     .ftco-about .one-half {
       padding: 5% 13% 5% 5%;
       width: 50%; } }
-  .ftco-about .one-half.img {
+  .ftco-about .one-half.img .one-half.canvas{
     display: block; }
     @media (max-width: 767.98px) {
-      .ftco-about .one-half.img {
+      .ftco-about .one-half.img .one-half.canvas{
         height: 300px; } }
 
 #accordion .card {

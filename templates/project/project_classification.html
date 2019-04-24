@@ -19,19 +19,20 @@
     </div>
 </div>
 
-<div id="result_show">
-    <section class="ftco-about d-md-flex">
-        <div class="one-half" style="padding: 0">
-            <img src="../../../{{ MEDIA_URL }}{{ img_dir }}" width="100%" height="100%">
+<div id="func">
+
+<section class="ftco-about d-md-flex">
+    <div class="one-half" style="padding: 0">
+        <canvas id="rect_canva" style="display: block; width: 100%;"></canvas>
+    </div>
+    <div class="one-half ftco-animate fadeInUp ftco-animated">
+        <div id="result_show">
+            {% for k,row in predict.items %}
+                <li>{{ k }}-{{ row }}</li>
+            {% endfor %}
         </div>
-        <div class="one-half ftco-animate fadeInUp ftco-animated">
-            <div>
-                {% for k,row in predict.items %}
-                    <li>{{ k }}-{{ row }}</li>
-                {% endfor %}
-            </div>
-        </div>
-    </section>
+    </div>
+</section>
 </div>
 
 <section class="ftco-section-parallax">
@@ -49,9 +50,10 @@
                 <form method="POST" enctype="multipart/form-data">
                     <label class="btn btn-primary py-3 px-5" for="file">选择图片</label>
                     <input type="file" accept="image/*" name="img" id="file"
-                           style="position:absolute;clip:rect(0 0 0 0);">
+                           style="position:absolute;clip:rect(0 0 0 0);"
+                           onchange="previewHandle(this)" />
                     <input type="button" class="btn btn-primary py-3 px-5" value="开始识别"
-                    onclick="UpladFile()"/>
+                    onclick="UpladFile(1)"/>
                 </form>
             </div>
         </div>
@@ -60,7 +62,6 @@
 </section>
 
 {% include "footer.html" %}
-
 {% include "js_include.html" %}
 
 </body>

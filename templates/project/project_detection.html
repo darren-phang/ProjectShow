@@ -27,25 +27,25 @@
         <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center"
              data-scrollax-parent="true">
             <div class="col-md-9 text-center ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
-                <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Image Classification</h1>
+                <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Image Detection</h1>
             </div>
         </div>
     </div>
 </div>
 
-<div id="result_show">
+<div id="func">
     <section class="ftco-about d-md-flex">
     <div class="one-half" style="padding: 0">
-        <img src="../../../{{ MEDIA_URL }}{{ img_dir }}" width="100%" height="100%">
+        <canvas id="rect_canva" style="display: block; width: 100%;"></canvas>
+{#        <img id="preview-img" src="../../../{{ MEDIA_URL }}{{ img_dir }}"#}
+{#             width="100%" height="100%">#}
     </div>
     <div class="one-half ftco-animate fadeInUp ftco-animated">
         <div>
-            {% for id,color in infos.items %}
-                <div class="con">
-                    <i style="background: {{ color }}"></i>
-                    <p style="background: {{ color }};">{{ id }}</p>
-                </div>
-            {% endfor %}
+            <div class="con" id="result_show">
+                <i style="background: {{ color }}"></i>
+                <p style="background: {{ color }};">{{ id }}</p>
+            </div>
         </div>
     </div>
 </section>
@@ -66,9 +66,10 @@
                 <form method="POST" enctype="multipart/form-data">
                     <label class="btn btn-primary py-3 px-5" for="file">选择图片</label>
                     <input type="file" accept="image/*" name="img" id="file"
-                           style="position:absolute;clip:rect(0 0 0 0);">
+                           style="position:absolute;clip:rect(0 0 0 0);"
+                    onchange="previewHandle(this)"/>
                     <input type="button" class="btn btn-primary py-3 px-5" value="开始识别"
-                    onclick="UpladFile()"/>
+                    onclick="UpladFile(2)"/>
                 </form>
             </div>
         </div>

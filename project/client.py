@@ -23,12 +23,12 @@ class ClientAPI(object):
         self.dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     def send_request(self, image_dir, model_name, signature_name,
-                     input_name, other_k=None):
+                     input_name, _id, other_k=None):
         x = time.time()
         channel = implementations.insecure_channel(self.host, int(self.port))
         stub = prediction_service_pb2.beta_create_PredictionService_stub(channel)
         image, scale = change_image_h_w(image_dir)
-        abs_img_dir = 'image/' + image_dir.split('/')[-1]
+        abs_img_dir = os.path.join('image', _id, image_dir.split('/')[-1])
         return self.process(abs_img_dir, image, input_name, model_name, other_k,
                             signature_name,
                             stub, scale)
@@ -53,7 +53,7 @@ class ClientAPI(object):
         results = {'result': result,
                    'abs_img_dir': abs_img_dir,
                    'scale': scale}
-        os.popen("chmod 777 " + os.path.join(self.dir_path, 'media', abs_img_dir)).readlines()
+        # os.popen("chmod 777 " + os.path.join(self.dir_path, 'media', abs_img_dir)).readlines()
         return results
 
     @staticmethod
@@ -76,15 +76,25 @@ class ClientAPI(object):
         for i in range(boexes.shape[0]):
             classes.append(1)
             scores.append(boexes[i, 4])
-            bboxes.append(np.array([boexes[i, 1]*results['scale'],
-                                    boexes[i, 0]*results['scale'],
-                                    boexes[i, 3]*results['scale'],
-                                    boexes[i, 2]*results['scale']]))
-        classes = np.array(classes)
-        scores = np.array(scores)
-        bboxes = np.array(bboxes)
-        results = ClientAPI.change_image(results, classes, scores, bboxes, label_infomation.face)
-        return results
+            bboxes.append([boexes[i, 0]*results['scale'],
+                           boexes[i, 1]*results['scale'],
+                           boexes[i, 2]*results['scale'],
+                           boexes[i, 3]*results['scale']])
+        colors = dict()
+        label = label_infomation.face
+        for i in range(len(classes)):
+            cls_id = int(classes[i])
+            if cls_id >= 0:
+                if label[int(cls_id)] not in colors:
+                    colors[label[int(cls_id)]] = (random.random(), random.random(), random.random())
+
+        # classes = np.array(classes)
+        # scores = np.array(scores)
+        # bboxes = np.array(bboxes)
+        # results = ClientAPI.change_image(results, classes, scores, bboxes, label_infomation.face)
+        # return results
+        return {"classes": classes, "scores": scores, "bboxes": bboxes,
+                "colors": ClientAPI.rgb_to_HEX_float(colors), "name": label_infomation.face_list}
 
     @staticmethod
     def detection_result_ssd(results):
@@ -147,7 +157,7 @@ class ClientAPI(object):
         width = img.shape[1]
         colors = dict()
         show_caption = True
-        if len(classes) > 15:
+        if len(classes) > 10:
             show_caption = False
         for i in range(classes.shape[0]):
             cls_id = int(classes[i])
@@ -190,3 +200,16 @@ def change_image_h_w(image_dir):
         value = s.getvalue()
         s.close()
     return value, scale
+
+
+def check_dir(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+
+def change_image_path(base_path, image_name, id):
+    check_dir(os.path.join(base_path, id))
+    abs_image_dir_old = os.path.join(base_path, image_name)
+    abs_image_dir_new = os.path.join(base_path, id, image_name)
+    os.renames(abs_image_dir_old, abs_image_dir_new)
+    return abs_image_dir_new

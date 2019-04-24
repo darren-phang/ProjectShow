@@ -1,5 +1,6 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, get_object_or_404, HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 import os
@@ -43,18 +44,19 @@ def project_show_page(request, id, type):
             img=request.FILES.get('img'),
             name=request.FILES.get('img').name,
         )
-
         new_img.save()
         img_id = new_img.id
         obj = Inception.objects.get(id=img_id)
         img_dir = obj.img
+        abs_image_dir = client.change_image_path(os.path.join(dir_path, 'media', 'image'),
+                                                 str(img_dir).split('/')[-1], str(id))
         api = client.ClientAPI(host=project.address, port=project.port)
 
     if type == 'classification':
         if request.method == 'POST':
             result = api.send_request(
-                os.path.join(dir_path, 'media', str(img_dir)), project.model_name,
-                project.signature_name, project.input_tensor_name)
+                abs_image_dir, project.model_name,
+                project.signature_name, project.input_tensor_name, _id=str(id))
             label_and_percentage = api.classification_result(result)
             label_and_percentage_str = json.dumps(label_and_percentage)
             obj.predict = label_and_percentage_str
@@ -64,7 +66,7 @@ def project_show_page(request, id, type):
                 'predict': json.loads(label_and_percentage_str)
             }
             print("\n--classification--" + os.path.join(dir_path, 'media', content['img_dir']) + "\n")
-            return HttpResponse(get_change(render(request, 'project/project_classification.html', content).content))
+            return JsonResponse(label_and_percentage)
         else:
             content = {
                 'img_dir': 'image/default_image_for_inception.jpeg',
@@ -79,32 +81,37 @@ def project_show_page(request, id, type):
             if project.model_name == 'face':
                 other_k['min_face_size_input:float'] = 18
             result = api.send_request(
-                os.path.join(dir_path, 'media', str(img_dir)), project.model_name,
-                project.signature_name, project.input_tensor_name, other_k=other_k)
+                abs_image_dir, project.model_name,
+                project.signature_name, project.input_tensor_name,
+                other_k=other_k, _id=str(id))
             if project.model_name == 'face':
-                api.detection_result_face(result)
+                # api.detection_result_face(result)
+                detection_response = api.detection_result_face(result)
             elif project.model_name == 'ssd':
-                api.detection_result_ssd(result)
-            content = {
-                'img_dir': str(result['abs_img_dir']),
-                'infos': result['colors']
-            }
-            print("\n--detection--" + os.path.join(dir_path, 'media', content['img_dir']) + "\n")
-            return HttpResponse(get_change(render(request, 'project/project_detection.html', content).content))
+                detection_response = api.detection_result_ssd(result)
+            return JsonResponse(detection_response)
         else:
             content = {
                 'img_dir': 'image/default_image_for_inception.jpeg',
                 'infos': {}
             }
         print("\n--detection--" + os.path.join(dir_path, 'media', content['img_dir']) + "\n")
-        #os.popen("chmod 666 " + os.path.join(dir_path, 'media', content['img_dir'])).readlines()
         return render(request, 'project/project_detection.html', content)
 
     if type == 'APP':
         pass
 
 
-def get_change(html):
+def get_html_for_detection(html):
     html = html.decode()
     html_return = html[html.find("<section"):html.find("section>") + 8]
     return html_return
+
+
+def get_html_for_classification(content):
+    predict = content["predict"]
+    html = ""
+    for pre in predict:
+        _str = "<li>" + pre + "-" + str(predict[pre]) + "</li>\n"
+        html += _str
+    return html

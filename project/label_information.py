@@ -50,3 +50,25 @@ ssd_voc_cn = {
     19: '火车',
     20: '显示器',
 }
+
+ssd_voc_en_list = ['none','aeroplane','bicycle',
+    'bird',
+    'boat',
+    'bottle',
+    'bus',
+    'car',
+    'cat',
+    'chair',
+    'cow',
+    'diningtable',
+    'dog',
+    'horse',
+    'motorbike',
+    'person',
+    'pottedplant',
+    'sheep',
+    'sofa',
+    'train',
+    'tvmonitor']
+
+face_list = ['none', 'face']
