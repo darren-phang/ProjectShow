@@ -24,7 +24,6 @@ class ClientAPI(object):
 
     def send_request(self, image_dir, model_name, signature_name,
                      input_name, _id, other_k=None):
-        x = time.time()
         channel = implementations.insecure_channel(self.host, int(self.port))
         stub = prediction_service_pb2.beta_create_PredictionService_stub(channel)
         image, scale = change_image_h_w(image_dir)
@@ -32,6 +31,14 @@ class ClientAPI(object):
         return self.process(abs_img_dir, image, input_name, model_name, other_k,
                             signature_name,
                             stub, scale)
+
+    def send_request_by_image(self, img, model_name, signature_name,
+                              input_name, other_k=None):
+        channel = implementations.insecure_channel(self.host, int(self.port))
+        stub = prediction_service_pb2.beta_create_PredictionService_stub(channel)
+        return self.process('None', img, input_name, model_name, other_k,
+                            signature_name,
+                            stub, 0)
 
     def process(self, abs_img_dir, image, input_name, model_name, other_k, signature_name, stub, scale):
         request = predict_pb2.PredictRequest()

@@ -83,5 +83,6 @@ function previewHandle(fileDOM) {
     reader.readAsDataURL(file);
 }
 
+
 load_image_to_canvas("../../../ProjectShow/media/image/default_image_for_inception.jpeg",
 [], [], [], [], []);

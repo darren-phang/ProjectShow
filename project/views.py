@@ -2,13 +2,17 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, get_object_or_404, HttpResponse, HttpResponseRedirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.functional import SimpleLazyObject
 import json
 import os
 
 import project.client as client
-from project.models import Inception
+from project.models import Inception, FaceVector
 # Create your views here.
 from .models import ProjectPost
+import project.facenet.tools as tools
+import scipy.misc as misc
+import numpy as np
 
 
 def index(request):
@@ -106,6 +110,50 @@ def get_response_detection(request, id):
     if project.model_name == 'face':
         # api.detection_result_face(result)
         detection_response = api.detection_result_face(result)
+        get_response_facenet(result['abs_img_dir'],
+                             detection_response["bboxes"], request.user)
     elif project.model_name == 'ssd':
         detection_response = api.detection_result_ssd(result)
     return JsonResponse(detection_response)
+
+
+def get_response_facenet(abs_img_dir, bboxes, user_id):
+    dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    face_image_dir = os.path.join(dir_path, 'media', 'image', 'face')
+    client.check_dir(face_image_dir)
+    image_name = abs_img_dir.split("/")[-1].split(".")[0]
+    img_dir = os.path.join(dir_path, 'media', abs_img_dir)
+
+    project = get_object_or_404(ProjectPost, id=6)
+    api = client.ClientAPI(host=project.address, port=project.port)
+    img = misc.imread(os.path.expanduser(img_dir), mode='RGB')
+    img_size = np.asarray(img.shape)[0:2]
+    embedding_list = []
+    img_face_list = []
+    match_face_dict = {}
+    for i, bboxe in enumerate(bboxes):
+        img_face = tools.clip_image(img, bboxe, img_size)
+        embedding = tools.get_face_embedding(img_face, project, api)
+        match_face, store = tools.get_face_vector(embedding, i)
+        if len(match_face) != 0:
+            match_face_dict[i] = match_face[0]
+        if store:
+            embedding_list.append(embedding)
+            img_face_list.append(img_face)
+        else:
+            embedding_list.append(False)
+            img_face_list.append(False)
+    for i in range(len(img_face_list)):
+        image_url = "%s_noOne_%s.jpg" % (image_name, i)
+        if img_face_list[i] is not False:
+            misc.imsave(os.path.join(face_image_dir, image_url), img_face_list[i])
+            if i in list(match_face_dict.keys()):
+                name = match_face_dict[i].face_name
+            else:
+                name = None
+            tools.save_vector(embedding_list[i], user_id, os.path.join('face', image_url), face_name=name)
+    for i in list(match_face_dict.keys()):
+        print("%s_noOne_%s.jpg" % (image_name, i), end=' ')
+        print(match_face_dict[i].face_name)
+
+

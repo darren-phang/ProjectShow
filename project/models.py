@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
-
+import numpy as np
 # Create your models here.
 
 
@@ -34,3 +34,13 @@ class ProjectPost(models.Model):
 
     def get_none_star_list(self):
         return list(range(5-int(self.star)))
+
+
+class FaceVector(models.Model):
+    vector = models.BinaryField()
+    face_name = models.CharField(max_length=50, default='NoOne')
+    user_id = models.CharField(max_length=50, default='')
+    image_url = models.CharField(max_length=200, default='')
+
+    def get_embedding(self):
+        return np.frombuffer(self.vector, dtype=np.float)
