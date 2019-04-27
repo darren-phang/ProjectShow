@@ -2,8 +2,10 @@ let ctx;
 var image_url_now;
 const canvas = document.getElementById("rect_canva");
 ctx = canvas.getContext("2d");
-function load_image_to_canvas(image_url, boxes, classes, scores, color, name){
+function load_image_to_canvas(image_url, boxes, classes,
+                              scores, color, name){
     document.getElementById("result_show").innerHTML="";
+    document.getElementById("face_image").innerHTML="";
     $(document).ready(function() {
       $("html, body").animate({
           scrollTop: $("#func").offset().top

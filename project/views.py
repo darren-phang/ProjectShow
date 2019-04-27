@@ -110,8 +110,9 @@ def get_response_detection(request, id):
     if project.model_name == 'face':
         # api.detection_result_face(result)
         detection_response = api.detection_result_face(result)
-        get_response_facenet(result['abs_img_dir'],
+        face_match = get_response_facenet(result['abs_img_dir'],
                              detection_response["bboxes"], request.user)
+        detection_response['face_match'] = face_match
     elif project.model_name == 'ssd':
         detection_response = api.detection_result_ssd(result)
     return JsonResponse(detection_response)
@@ -136,7 +137,7 @@ def get_response_facenet(abs_img_dir, bboxes, user_id):
         embedding = tools.get_face_embedding(img_face, project, api)
         match_face, store = tools.get_face_vector(embedding, i)
         if len(match_face) != 0:
-            match_face_dict[i] = match_face[0]
+            match_face_dict[i] = match_face[0].to_string()
         if store:
             embedding_list.append(embedding)
             img_face_list.append(img_face)
@@ -148,12 +149,13 @@ def get_response_facenet(abs_img_dir, bboxes, user_id):
         if img_face_list[i] is not False:
             misc.imsave(os.path.join(face_image_dir, image_url), img_face_list[i])
             if i in list(match_face_dict.keys()):
-                name = match_face_dict[i].face_name
+                name = match_face_dict[i]['face_name']
             else:
                 name = None
             tools.save_vector(embedding_list[i], user_id, os.path.join('face', image_url), face_name=name)
     for i in list(match_face_dict.keys()):
         print("%s_noOne_%s.jpg" % (image_name, i), end=' ')
-        print(match_face_dict[i].face_name)
+        print(match_face_dict[i]['face_name'])
+    return match_face_dict
 
 

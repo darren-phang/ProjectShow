@@ -44,3 +44,11 @@ class FaceVector(models.Model):
 
     def get_embedding(self):
         return np.frombuffer(self.vector, dtype=np.float)
+
+    def to_string(self):
+        info = {}
+        info['face_name'] = self.face_name
+        info['image_url'] = self.image_url
+        image_from = self.image_url.split('/')[-1].split('_')[0] + '.jpg'
+        info['from_image'] = 'face/' + image_from
+        return info

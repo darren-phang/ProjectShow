@@ -71,7 +71,7 @@ def get_face_vector(embedding, face_ind, top_k=1):
         sort_dist = np.expand_dims(sort_dist, axis=0)
     match_face = []
     print(dist[sort_dist[0]])
-    if sort_dist.size == 0 or dist[sort_dist[0]] > 0.65:
+    if sort_dist.size == 0 or dist[sort_dist[0]] > 0.7:
         return [], True
     for i, face in enumerate(FaceVector.objects.filter()):
         for j in sort_dist[:top_k]:
@@ -81,3 +81,4 @@ def get_face_vector(embedding, face_ind, top_k=1):
     if dist[sort_dist[0]] <= 0.1:
         return match_face, False
     return match_face, True
+

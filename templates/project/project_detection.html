@@ -3,18 +3,33 @@
 <html lang="en">
 {% include "css_include.html" %}
 <style>
-    .con{position:relative;height:1.875rem;line-height: 1.875rem;margin:2.47rem auto;text-align: center;}
-        .con i{display:block;height:1px;background:#e1e1e1;position:absolute;top:0.9rem;width:100%;}
-        .con p{
-            display:inline-block;
-            font-size: 0.75rem;
-            color: #ffffff;
-            {#background:rgba(240,240,240,1);#}
-            padding:0 1.875rem;
-            text-align: center;
-            margin:0 auto;
-            position:relative;
-            z-index:2;}
+    .con {
+        position: relative;
+        height: 1.875rem;
+        line-height: 1.875rem;
+        margin: 2.47rem auto;
+        text-align: center;
+    }
+
+    .con i {
+        display: block;
+        height: 1px;
+        background: #e1e1e1;
+        position: absolute;
+        top: 0.9rem;
+        width: 100%;
+    }
+
+    .con p {
+        display: inline-block;
+        font-size: 0.75rem;
+        color: #ffffff;
+    {#background:rgba(240,240,240,1);#} padding: 0 1.875rem;
+        text-align: center;
+        margin: 0 auto;
+        position: relative;
+        z-index: 2;
+    }
 
 </style>
 <body>
@@ -27,7 +42,8 @@
         <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center"
              data-scrollax-parent="true">
             <div class="col-md-9 text-center ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
-                <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Image Detection</h1>
+                <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">Image
+                    Detection</h1>
             </div>
         </div>
     </div>
@@ -35,19 +51,34 @@
 
 <div id="func">
     <section class="ftco-about d-md-flex">
-    <div class="one-half" style="padding: 0">
-        <canvas id="rect_canva" style="display: block; width: 100%;"></canvas>
-{#        <img id="preview-img" src="../../../{{ MEDIA_URL }}{{ img_dir }}"#}
-{#             width="100%" height="100%">#}
-    </div>
-    <div class="one-half ftco-animate fadeInUp ftco-animated">
-        <div id="result_show">
-            <div class="con">
-                <i style="background: {{ color }}"></i>
-                <p style="background: {{ color }};">{{ id }}</p>
+        <div class="one-half" style="padding: 0">
+            <canvas id="rect_canva" style="display: block; width: 100%;"></canvas>
+            {#        <img id="preview-img" src="../../../{{ MEDIA_URL }}{{ img_dir }}"#}
+            {#             width="100%" height="100%">#}
+        </div>
+        <div class="one-half ftco-animate fadeInUp ftco-animated">
+            <div id="result_show"></div>
+            <div id="face_image" class="col-lg-10">
+{#                <div class="row">#}
+{#                    <div class="col-sm col-md-3 col-lg-4 ftco-animate">#}
+{#                        <div class="destination">#}
+{#                            <a href="#" id="circle" class="ec-circle"#}
+{#                               style="cursor: pointer;" onmouseenter="addClass(this, 'ec-circle-hover');"#}
+{#                               onmouseleave="removeClass(this, 'ec-circle-hover');">#}
+{#                                <img class="ec-circle"#}
+{#                                     src="../../../{{ MEDIA_URL }}/image/face/img_1556327188000_noOne_0.jpg"#}
+{#                                     width="100%" height="100%">#}
+{#                            </a>#}
+{#                            <div class="text p-4">#}
+{#                                <a>彭伟航</a>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+</div>
 </section>
 </div>
 
@@ -67,9 +98,9 @@
                     <label class="btn btn-primary py-3 px-5" for="file">选择图片</label>
                     <input type="file" accept="image/*" name="img" id="file"
                            style="position:absolute;clip:rect(0 0 0 0);"
-                    onchange="previewHandle(this)"/>
+                           onchange="previewHandle(this)"/>
                     <input type="button" class="btn btn-primary py-3 px-5" value="开始识别"
-                    onclick="UpladFile(2)"/>
+                           onclick="UpladFile(2)"/>
                 </form>
             </div>
         </div>
@@ -80,7 +111,23 @@
 {% include "footer.html" %}
 
 {% include "js_include.html" %}
+<script type="text/javascript">
+    function hasClass(elements, cName) {
+        return !!elements.className.match(new RegExp("(\\s|^)" + cName + "(\\s|$)"));
+    }
 
+    function addClass(elements, cName) {
+        if (!hasClass(elements, cName)) {
+            elements.className += " " + cName;
+        }
+    }
+
+    function removeClass(elements, cName) {
+        if (hasClass(elements, cName)) {
+            elements.className = elements.className.replace(new RegExp("(\\s|^)" + cName + "(\\s|$)"), " ");
+        }
+    }
+</script>
 </body>
 
 </html>
