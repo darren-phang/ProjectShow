@@ -14,7 +14,7 @@ import project.label_information as label_infomation
 import os, stat
 from PIL import Image
 from io import StringIO, BytesIO
-
+from memory_profiler import profile
 
 class ClientAPI(object):
     def __init__(self, host='39.108.183.209', port='9000'):

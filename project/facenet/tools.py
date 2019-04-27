@@ -50,7 +50,8 @@ def get_all_vector():
     vectors_array = []
     vectors = FaceVector.objects.filter()
     for vector in vectors:
-        vectors_array.append(vector.get_embedding())
+        if vector.face_name != '':
+            vectors_array.append(vector.get_embedding())
     return np.array(vectors_array)
 
 

@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404, HttpResponse, HttpRespon
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.functional import SimpleLazyObject
+from memory_profiler import profile
 import json
 import os
 
@@ -136,7 +137,7 @@ def get_response_facenet(abs_img_dir, bboxes, user_id):
         img_face = tools.clip_image(img, bboxe, img_size)
         embedding = tools.get_face_embedding(img_face, project, api)
         match_face, store = tools.get_face_vector(embedding, i)
-        if len(match_face) != 0:
+        if len(match_face) != 0 and match_face[0].face_name != '':
             match_face_dict[i] = match_face[0].to_string()
         if store:
             embedding_list.append(embedding)
