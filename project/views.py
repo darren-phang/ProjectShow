@@ -31,7 +31,7 @@ def index(request):
         project = project_page.object_list
     return render(request, "project/project.html",
                   {"projects": project, "page": project_page,
-                   "total_pages": list(range(1, int(ProjectPost.objects.count() / 6 + 2))),
+                   "total_pages": get_range(page)
                    })
 
 
@@ -160,3 +160,40 @@ def get_response_facenet(abs_img_dir, bboxes, user_id):
     return match_face_dict
 
 
+@csrf_exempt
+def face(request):
+    if request.method == "POST":
+        face_name = request.POST['face_name']
+        image_name = request.POST['image_name']
+        face = FaceVector.objects.get(image_url=image_name)
+        face.face_name = face_name
+        face.save()
+        return HttpResponse("succeed")
+    face_list = FaceVector.objects.filter()
+    paginator = Paginator(face_list, 6)
+    page = request.GET.get('page')
+    if page is None:
+        page = 1
+    try:
+        project_page = paginator.page(page)
+        project = project_page.object_list
+    except PageNotAnInteger:
+        project_page = paginator.page(1)
+        project = project_page.object_list
+    except EmptyPage:
+        project_page = paginator.page(paginator.num_pages)
+        project = project_page.object_list
+
+    return render(request, 'project/face.html',
+                  {"faces": project, "page": project_page,
+                   "total_pages": get_range(page)}
+                  )
+
+
+def get_range(page):
+    # start = int(page)
+    start = max(int(page)-2, 1)
+    end = min(int(FaceVector.objects.count() / 6 + 2), start + 6)
+    if end - start != 6:
+        start = max(0, end - 6)
+    return list(range(start, end))

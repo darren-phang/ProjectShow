@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from blog.models import BlogArticles
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from article.models import ArticleColumn, ArticlePost, ArticleTag
+from project.views import get_range
 
 
 def index(request):
@@ -12,6 +13,8 @@ def index(request):
     articles_list = ArticlePost.objects.filter()
     paginator = Paginator(articles_list, 6)
     page = request.GET.get('page')
+    if page is None:
+        page = 1
     try:
         current_page = paginator.page(page)
         articles = current_page.object_list
@@ -23,7 +26,7 @@ def index(request):
         articles = current_page.object_list
     return render(request, "blog/blog.html",
                   {"articles": articles, "page": current_page,
-                   "total_pages": list(range(1, int(ArticlePost.objects.count()/6+2)))})
+                   "total_pages": get_range(page)})
 
 
 def blog_titile(request):

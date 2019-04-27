@@ -7,13 +7,13 @@
 {% include "header.html" %}
 <!-- END nav -->
 
-<div class="hero-wrap js-fullheight" style="background-image: url('../static/images/jingzhiyuan1.jpg');">
+<div class="hero-wrap js-fullheight" style="background-image: url('../../static/images/jingzhiyuan1.jpg');">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-center justify-content-center"
              data-scrollax-parent="true">
             <div class="col-md-9 text-center ftco-animate" data-scrollax=" properties: { translateY: '70%' }">
-                <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }"><span
+                <p class="breadcrumbs" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
                         class="mr-2">
 {#                    <a href="../home/index1.html">Home</a></span> <span>Hotel</span></p>#}
                 <h1 class="mb-3 bread" data-scrollax="properties: { translateY: '30%', opacity: 1.6 }">
@@ -112,37 +112,38 @@
                 <div class="row">
                     {% for project in projects %}
                         <div class="col-sm col-md-6 col-lg-4 ftco-animate">
-                        <div class="destination">
-                            <a href="{{ project.get_project_url }}" class="img img-2 d-flex justify-content-center align-items-center"
-                               style="background-image: url({% static project.image_url %});">
-                                <div class="icon d-flex justify-content-center align-items-center">
-                                    <span class="icon-link"></span>
-                                </div>
-                            </a>
-                            <div class="text p-3">
-                                <div class="d-flex">
-                                    <div class="one">
-                                        <h3><a href="{{ project.get_project_url }}">{{ project.title }}</a></h3>
-                                        <p class="rate">
-                                            {% for i in project.get_star_list %}
-                                                <i class="icon-star"></i>
-                                            {% endfor %}
-                                            {% for i in project.get_none_star_list %}
-                                                <i class="icon-star-o"></i>
-                                            {% endfor %}
-
-                                            <span>{{ project.star }}</span>
-                                        </p>
+                            <div class="destination">
+                                <a href="{{ project.get_project_url }}"
+                                   class="img img-2 d-flex justify-content-center align-items-center"
+                                   style="background-image: url({% static project.image_url %});">
+                                    <div class="icon d-flex justify-content-center align-items-center">
+                                        <span class="icon-link"></span>
                                     </div>
+                                </a>
+                                <div class="text p-3">
+                                    <div class="d-flex">
+                                        <div class="one">
+                                            <h3><a href="{{ project.get_project_url }}">{{ project.title }}</a></h3>
+                                            <p class="rate">
+                                                {% for i in project.get_star_list %}
+                                                    <i class="icon-star"></i>
+                                                {% endfor %}
+                                                {% for i in project.get_none_star_list %}
+                                                    <i class="icon-star-o"></i>
+                                                {% endfor %}
+
+                                                <span>{{ project.star }}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <p>{{ project.describe }}</p>
+                                    <hr>
+                                    <p class="bottom-area d-flex">
+                                        <span><i class="icon-map-o"></i>{{ project.company }}</span>
+                                        <span class="ml-auto"><a href="{{ project.about_more_url }}">了解更多</a></span>
+                                    </p>
                                 </div>
-                                <p>{{ project.describe }}</p>
-                                <hr>
-                                <p class="bottom-area d-flex">
-                                    <span><i class="icon-map-o"></i>{{ project.company }}</span>
-                                    <span class="ml-auto"><a href="{{ project.about_more_url }}">了解更多</a></span>
-                                </p>
                             </div>
-                        </div>
                         </div>
                     {% endfor %}
                 </div>
@@ -154,9 +155,9 @@
                                 <li><a href="#">&lt;</a></li>
                                 {% for item in total_pages %}
                                     {% if item == page.number %}
-                                    <li class="active"><a href="?page={{ item }}">{{ item }}</a></li>
+                                        <li class="active"><a href="?page={{ item }}">{{ item }}</a></li>
                                     {% else %}
-                                    <li><a href="?page={{ item }}">{{ item }}</a></li>
+                                        <li><a href="?page={{ item }}">{{ item }}</a></li>
                                     {% endif %}
                                 {% endfor %}
                                 <li><a href="#">&gt;</a></li>

@@ -26,4 +26,6 @@ urlpatterns = [
          name='classification'),
     path('detection/<int:id>/', view.get_response_detection,
          name='detection'),
+    path('face/', view.face,
+         name='face'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

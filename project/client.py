@@ -27,6 +27,7 @@ class ClientAPI(object):
         channel = implementations.insecure_channel(self.host, int(self.port))
         stub = prediction_service_pb2.beta_create_PredictionService_stub(channel)
         image, scale = change_image_h_w(image_dir)
+
         abs_img_dir = os.path.join('image', _id, image_dir.split('/')[-1])
         return self.process(abs_img_dir, image, input_name, model_name, other_k,
                             signature_name,
