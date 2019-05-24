@@ -8,4 +8,4 @@ class UserProfileAdmin(admin.ModelAdmin):
     list_filter = ("phone",)
 
 
-admin.site.register(UserProfile, UserProfileAdmin)
+admin.site.register(UserProfile)

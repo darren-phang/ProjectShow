@@ -23,18 +23,20 @@ class ClientAPI(object):
         self.dir_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     def send_request(self, image_dir, model_name, signature_name,
-                     input_name, _id, other_k=None):
+                     input_name, _id):
         channel = implementations.insecure_channel(self.host, int(self.port))
         stub = prediction_service_pb2.beta_create_PredictionService_stub(channel)
-        image, scale = change_image_h_w(image_dir)
-
+        image, scale, min_face = change_image_h_w(image_dir)
+        other_k = {}
+        if model_name == 'face':
+            other_k['min_face_size_input:float'] = min_face
         abs_img_dir = os.path.join('image', _id, image_dir.split('/')[-1])
         return self.process(abs_img_dir, image, input_name, model_name, other_k,
                             signature_name,
                             stub, scale)
 
     def send_request_by_image(self, img, model_name, signature_name,
-                              input_name, other_k=None):
+                              input_name, other_k={}):
         channel = implementations.insecure_channel(self.host, int(self.port))
         stub = prediction_service_pb2.beta_create_PredictionService_stub(channel)
         return self.process('None', img, input_name, model_name, other_k,
@@ -48,7 +50,7 @@ class ClientAPI(object):
         request.model_spec.signature_name = signature_name
         # protobuf 序列化并发送请求和接受结果
         request.inputs[input_name].CopyFrom(util.make_tensor_proto(image, dtype=tf.string))
-        if other_k is not None:
+        if len(other_k) != 0:
             for key in list(other_k.keys()):
                 name, _type = key.split(':')
                 if _type == 'int':
@@ -221,13 +223,16 @@ def change_image_h_w(image_dir):
         if max_h_w > 1000:
             scale = max_h_w/1000
             img = img.resize((int(w/scale), int(h/scale)))
+            min_face = min((int(w/scale), int(h/scale))) / 28
             img.save(s, format='JPEG')
         else:
             img.save(s, format='JPEG')
             scale = 1
+            min_face = min(h, w) / 28
         value = s.getvalue()
         s.close()
-    return value, scale
+    print(min_face)
+    return value, scale, min_face
 
 
 def check_dir(path):

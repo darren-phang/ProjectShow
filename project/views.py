@@ -1,5 +1,6 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import render, get_object_or_404, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404,\
+    HttpResponse, HttpResponseRedirect, render_to_response
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.functional import SimpleLazyObject
@@ -17,9 +18,11 @@ import numpy as np
 
 
 def index(request):
-    project_list = ProjectPost.objects.filter()
+    project_list = ProjectPost.objects.exclude(type="Other")
     paginator = Paginator(project_list, 6)
     page = request.GET.get('page')
+    if page is None:
+        page = 1
     try:
         project_page = paginator.page(page)
         project = project_page.object_list
@@ -101,18 +104,15 @@ def get_response_detection(request, id):
     abs_image_dir = client.change_image_path(os.path.join(dir_path, 'media', 'image'),
                                              str(img_dir).split('/')[-1], str(id))
     api = client.ClientAPI(host=project.address, port=project.port)
-    other_k = {}
-    if project.model_name == 'face':
-        other_k['min_face_size_input:float'] = 18
+
     result = api.send_request(
         abs_image_dir, project.model_name,
-        project.signature_name, project.input_tensor_name,
-        other_k=other_k, _id=str(id))
+        project.signature_name, project.input_tensor_name, _id=str(id))
     if project.model_name == 'face':
         # api.detection_result_face(result)
         detection_response = api.detection_result_face(result)
         face_match = get_response_facenet(result['abs_img_dir'],
-                             detection_response["bboxes"], request.user)
+                                          detection_response["bboxes"], request.user)
         detection_response['face_match'] = face_match
     elif project.model_name == 'ssd':
         detection_response = api.detection_result_ssd(result)
@@ -160,15 +160,7 @@ def get_response_facenet(abs_img_dir, bboxes, user_id):
     return match_face_dict
 
 
-@csrf_exempt
 def face(request):
-    if request.method == "POST":
-        face_name = request.POST['face_name']
-        image_name = request.POST['image_name']
-        face = FaceVector.objects.get(image_url=image_name)
-        face.face_name = face_name
-        face.save()
-        return HttpResponse("succeed")
     face_list = FaceVector.objects.filter()
     paginator = Paginator(face_list, 6)
     page = request.GET.get('page')
@@ -190,10 +182,33 @@ def face(request):
                   )
 
 
+@csrf_exempt
+def change_name(request):
+    if request.method == "POST":
+        face_name = request.POST['face_name']
+        image_name = request.POST['image_name']
+        face = FaceVector.objects.get(image_url=image_name)
+        face.face_name = face_name
+        face.save()
+        return HttpResponse("succeed")
+    else:
+        return HttpResponse("loss")
+
+
+@csrf_exempt
+def delete_face(request):
+    if request.method == "POST":
+        image_name = request.POST['image_name']
+        FaceVector.objects.filter(image_url=image_name).delete()
+        return HttpResponse("succeed")
+    else:
+        return HttpResponse("loss")
+
+
 def get_range(page):
     # start = int(page)
-    start = max(int(page)-2, 1)
-    end = min(int(FaceVector.objects.count() / 6 + 2), start + 6)
+    start = max(int(page) - 2, 1)
+    end = min(int(FaceVector.objects.count() / 6 + 1), start + 6)
     if end - start != 6:
         start = max(0, end - 6)
     return list(range(start, end))

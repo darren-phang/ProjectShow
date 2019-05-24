@@ -2,11 +2,38 @@
 <!DOCTYPE html>
 <html lang="en">
 {% include "css_include.html" %}
-<body>
+<style>
+    .imgDiv {
+        display: inline-block;
+        position: relative;
+    }
 
+    .imgDiv .delete {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        width: 50px;
+        height: 50px;
+        display: none;
+    }
+</style>
+<body>
+<script>
+    $(document).ready(init);
+        function init() {
+            $(".imgDiv").mouseenter(function () {
+                $(this).find(".delete").show();
+
+            })
+
+            $(".imgDiv").mouseleave(function () {
+                $(this).find(".delete").hide();
+            });
+
+        }
+</script>
 {% include "header.html" %}
 <!-- END nav -->
-
 <div class="hero-wrap js-fullheight" style="background-image: url('../../static/images/jingzhiyuan1.jpg');">
     <div class="overlay"></div>
     <div class="container">
@@ -61,12 +88,16 @@
                     {% for face in faces %}
                         <div class="col-sm col-md-3 col-lg-4 ftco-animate">
                             <div class="destination">
-                                <img class="ec-circle"
-                                     src="../{{ MEDIA_URL }}image/{{ face.image_url }}"
-                                     width="100%" height="100%">
+                                <div class="imgDiv">
+                                    <img class="ec-circle"
+                                         src="../{{ MEDIA_URL }}image/{{ face.image_url }}"
+                                         width="100%" height="100%">
+                                    <img src="http://www.iconpng.com/png/sm-reflection-r/button-cross.png"
+                                         class="delete" name="{{ face.image_url }}" onclick="delete_face(this)"/>
+                                </div>
                                 <div class="text p-3" id="face_name">
                                     <input type="text" name="{{ face.image_url }}" value="{{ face.face_name }}"
-                                    onkeydown="if(event.keyCode==13){change_name(this)}">
+                                           onkeydown="if(event.keyCode==13){change_name(this)}">
                                 </div>
                             </div>
                         </div>
@@ -109,9 +140,24 @@
         form.append("image_name", image_url);
         form.append("face_name", face_name); // 文件对象
         xhr = new XMLHttpRequest();  // XMLHttpRequest 对象
-        xhr.open("post", window.location.href.split("?")[0], true); //post方式，url为服务器请求地址，true 该参数规定请求是否异步处理。
+        xhr.open("post", window.location.href.split("?")[0]+"change/", true); //post方式，url为服务器请求地址，true 该参数规定请求是否异步处理。
         xhr.send(form); //开始上传，发送form数据
         e.blur();
+    }
+
+    function delete_face(e) {
+        var xhr;
+        var face_name = e.value;
+        var image_url = e.name;
+        console.log(image_url);
+        var form = new FormData(); // FormData 对象
+        form.append("image_name", image_url);
+        form.append("face_name", face_name); // 文件对象
+        xhr = new XMLHttpRequest();  // XMLHttpRequest 对象
+        xhr.open("post", window.location.href.split("?")[0]+"delete/", true); //post方式，url为服务器请求地址，true 该参数规定请求是否异步处理。
+        xhr.send(form); //开始上传，发送form数据
+        window.location.reload();
+        window.location.reload();
     }
 </script>
 </body>

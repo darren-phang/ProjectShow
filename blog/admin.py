@@ -13,4 +13,4 @@ class BlogArticlesAdmin(admin.ModelAdmin):
     ordering = ["publish", "author"]
 
 
-admin.site.register(BlogArticles, BlogArticlesAdmin)
+admin.site.register(BlogArticles)

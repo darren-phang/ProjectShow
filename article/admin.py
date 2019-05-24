@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from article.models import ArticleColumn
+from . import models
 
 
 class ArticleColumnAdmin(admin.ModelAdmin):
@@ -9,4 +9,8 @@ class ArticleColumnAdmin(admin.ModelAdmin):
     list_display = ("column", "created", "user",)
 
 
-admin.site.register(ArticleColumn, ArticleColumnAdmin)
+admin.site.register(models.ArticleColumn)
+admin.site.register(models.ArticlePost)
+admin.site.register(models.ArticleTag)
+admin.site.register(models.Comment)
+

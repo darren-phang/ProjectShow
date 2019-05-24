@@ -22,7 +22,7 @@ SECRET_KEY = '&#p0#emjyh)pcyyk$bf3cl_-2#a8*z7brn^un(y_o(lj0q7)uo'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+LANGUAGE_CODE = 'zh-hans'
 ALLOWED_HOSTS = ["39.108.183.209", "www.strivexj.com", "strivexj.com", "127.0.0.1", "*", ]
 
 # Application definition

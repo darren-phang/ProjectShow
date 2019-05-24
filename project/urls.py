@@ -19,13 +19,17 @@ from django.conf import settings
 import project.views as view
 
 urlpatterns = [
-    path('', view.index, name='project_home'),
-    path('project_show/<int:id>/<str:type>/', view.project_show_page,
-         name='project_show'),
-    path('classification/<int:id>/', view.get_response_classification,
-         name='classification'),
-    path('detection/<int:id>/', view.get_response_detection,
-         name='detection'),
-    path('face/', view.face,
-         name='face'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                  path('', view.index, name='project_home'),
+                  path('project_show/<int:id>/<str:type>/', view.project_show_page,
+                       name='project_show'),
+                  path('classification/<int:id>/', view.get_response_classification,
+                       name='classification'),
+                  path('detection/<int:id>/', view.get_response_detection,
+                       name='detection'),
+                  path('face/', view.face,
+                       name='face'),
+                  path('face/change/', view.change_name,
+                       name='face_change'),
+                  path('face/delete/', view.delete_face,
+                       name='face_delete'),
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

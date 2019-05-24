@@ -71,14 +71,18 @@ def get_face_vector(embedding, face_ind, top_k=1):
     if len(np.shape(sort_dist)) == 0:
         sort_dist = np.expand_dims(sort_dist, axis=0)
     match_face = []
-    print(dist[sort_dist[0]])
+    # print(dist)
     if sort_dist.size == 0 or dist[sort_dist[0]] > 0.7:
         return [], True
+    offset = 0
     for i, face in enumerate(FaceVector.objects.filter()):
+        if face.face_name == "":
+            offset += 1
+            continue
         for j in sort_dist[:top_k]:
-            if i == j:
+            if i == (j + offset):
                 match_face.append(face)
-                # print(face_ind, face.face_name, face.image_url)
+                print(face_ind, face.face_name, face.image_url)
     if dist[sort_dist[0]] <= 0.1:
         return match_face, False
     return match_face, True
